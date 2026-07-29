@@ -90,9 +90,17 @@ const REPAYMENT_ASSETS: Record<RepaymentTab, { src: string; alt: string }> = {
   },
 };
 
-function CardShell({ children }: { children: React.ReactNode }) {
+type CardShellProps<T extends string> = {
+  children: React.ReactNode;
+} & (
+  | { variant: "tabbed"; tabs: { value: T; label: string }[]; active: T; onChange: (value: T) => void; tabClassName?: string }
+  | { variant: "plain" }
+);
+
+function CardShell<T extends string>(props: CardShellProps<T>) {
+  const { children } = props;
   return (
-    <div className="relative flex h-[520px] w-full flex-col items-center justify-between overflow-hidden rounded-3xl border border-[#e4e4e4] p-6">
+    <div className="relative flex h-auto min-h-[420px] w-full flex-col items-center justify-between gap-6 overflow-hidden rounded-3xl border border-[#e4e4e4] p-6 sm:h-[520px]">
       <Image
         src="/financing-cost/card-bg-texture.png"
         alt=""
@@ -100,6 +108,9 @@ function CardShell({ children }: { children: React.ReactNode }) {
         sizes="(min-width: 1024px) 420px, 100vw"
         className="pointer-events-none rounded-3xl object-cover opacity-25"
       />
+      {props.variant === "tabbed" && (
+        <TabSwitcher active={props.active} onChange={props.onChange} tabs={props.tabs} className={props.tabClassName} />
+      )}
       {children}
     </div>
   );
@@ -123,7 +134,7 @@ export default function FinancingCostV2() {
 
       <div className="grid w-full grid-cols-1 items-stretch gap-5 lg:grid-cols-3">
         {/* Rent Share Card */}
-        <CardShell>
+        <CardShell variant="plain">
           <div className="relative mx-auto h-[270px] w-[220px] shrink-0 sm:h-[296px] sm:w-[241px]">
             <Image
               src="/financing-cost/rent-share-illustration.png"
@@ -137,22 +148,22 @@ export default function FinancingCostV2() {
             <p className="font-heading text-xl font-bold text-dark">
               Rent Share <span className="font-heading text-base font-semibold text-[#6b6d6b]">(Monthly)</span>
             </p>
-            <p className="h-[72px] text-base font-medium leading-6 text-[#6b6d6b]">
+            <p className="text-base font-medium leading-6 text-[#6b6d6b] sm:h-[72px]">
               In return for unlocking your equity, Pauzible receives a small share of your rent.</p>
           </div>
         </CardShell>
 
         {/* Interest Cost Card */}
-        <CardShell>
-          <TabSwitcher
-            active={interestTab}
-            onChange={setInterestTab}
-            tabs={[
-              { value: "full", label: "Full monthly" },
-              { value: "partial", label: "Partial" },
-              { value: "rent", label: "Rent share only" },
-            ]}
-          />
+        <CardShell
+          variant="tabbed"
+          active={interestTab}
+          onChange={setInterestTab}
+          tabs={[
+            { value: "full", label: "Full monthly" },
+            { value: "partial", label: "Partial" },
+            { value: "rent", label: "Rent share only" },
+          ]}
+        >
           <div className="relative h-[190px] w-full shrink-0">
             <Image
               key={INTEREST_ASSETS[interestTab].src}
@@ -165,24 +176,24 @@ export default function FinancingCostV2() {
           </div>
           <div className="relative flex w-full flex-col items-start gap-2 tracking-[-0.24px]">
             <p className="font-heading text-xl font-bold text-dark">Interest Cost</p>
-            <p className="h-[72px] text-base font-medium leading-6 text-[#6b6d6b]">
+            <p className="text-base font-medium leading-6 text-[#6b6d6b] sm:h-[72px]">
               Choose to pay financing costs monthly or at the end of the financing term with monthly compounding.
             </p>
           </div>
         </CardShell>
 
         {/* Final Repayment Card */}
-        <CardShell>
-          <TabSwitcher
-            active={repaymentTab}
-            onChange={setRepaymentTab}
-            className="max-w-[364px]"
-            tabs={[
-              { value: "downside", label: "Downside −10%" },
-              { value: "base", label: "Base" },
-              { value: "upside", label: "Upside +10%" },
-            ]}
-          />
+        <CardShell
+          variant="tabbed"
+          active={repaymentTab}
+          onChange={setRepaymentTab}
+          tabClassName="max-w-[364px]"
+          tabs={[
+            { value: "downside", label: "Downside −10%" },
+            { value: "base", label: "Base" },
+            { value: "upside", label: "Upside +10%" },
+          ]}
+        >
           <div className={`relative w-full shrink-0 ${repaymentTab === "base" ? "h-[157px]" : "h-[195px]"}`}>
             <Image
               key={REPAYMENT_ASSETS[repaymentTab].src}
@@ -197,10 +208,10 @@ export default function FinancingCostV2() {
             <p className="font-heading text-xl font-bold text-dark">
               Final Repayment{" "}
               <span className="font-heading text-base font-semibold text-[#6b6d6b]">
-                (Property Value-Linked)
+                (Property Value-Linked) 
               </span>
             </p>
-            <p className="h-[72px] text-base font-medium leading-6 text-[#6b6d6b]">
+            <p className="text-base font-medium leading-6 text-[#6b6d6b] sm:h-[72px]">
               At the end of the financing term, repayment reflects your property&apos;s market value.
               Pauzible shares in both upside and downside.
             </p>

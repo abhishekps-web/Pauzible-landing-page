@@ -6,10 +6,13 @@ import { useState } from "react";
 type PaymentOption = "rent" | "mixed" | "full";
 type PaymentMethod = "fixed" | "share";
 
-const MONTHLY_INTEREST_RATE = 0.004; // 0.40% per month, illustrative fixed rate
-const MIN_RENT_SHARE = 0.2; // "Rent share only" — lower bound of the payment slider, as a share of monthly rent
-const MAX_RENT_SHARE = 1; // "Full monthly" — upper bound of the payment slider, i.e. the full monthly rent
-const BASE_TERM_YEARS = 5; // reference term the minimum rent-share requirement is calibrated against
+// Nominal monthly rate by term, per payment method (matches production rate card).
+const RATE_TABLE_FIXED: Record<2 | 3 | 5, number> = { 2: 0.0079, 3: 0.0079, 5: 0.0083 };
+const RATE_TABLE_SHARE: Record<2 | 3 | 5, number> = { 2: 0.0075, 3: 0.007, 5: 0.0057 };
+const RATE_ADJUSTMENT = 0.0016666666666666668; // flat monthly offset baked into the effective rate
+const FINANCING_LIMIT = 100000; // threshold above which the financing amount is flagged as out of range
+const MIN_FINANCING_AMOUNT = 10000; // lower bound of the financing amount slider
+const FINANCING_AMOUNT_STEP = 2500; // slider increment/decrement step
 
 function formatMoney(amount: number) {
   return `£${Math.max(0, Math.round(amount)).toLocaleString("en-GB")}`;
@@ -33,12 +36,12 @@ export default function EquityCalculator() {
   const [propertyValue, setPropertyValue] = useState(500000);
   const [mortgageBalance, setMortgageBalance] = useState(300000);
   const [term, setTerm] = useState<2 | 3 | 5>(5);
-  const [monthlyRent, setMonthlyRent] = useState(1627);
+  const [monthlyRent, setMonthlyRent] = useState(1667);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("fixed");
   const [paymentPercent, setPaymentPercent] = useState(0);
 
   const equity = Math.max(propertyValue - mortgageBalance, 0);
-  const financingAmount = Math.min(financingAmountRaw, equity);
+  const financingAmount = Math.max(MIN_FINANCING_AMOUNT, Math.min(financingAmountRaw, equity));
 
   const equityPercent = equity > 0 ? (financingAmount / equity) * 100 : 0;
   const propertyValuePercent = propertyValue > 0 ? (financingAmount / propertyValue) * 100 : 0;
@@ -46,22 +49,33 @@ export default function EquityCalculator() {
   const retainedWidthPct = propertyValue > 0 ? Math.max(0, ((equity - financingAmount) / propertyValue) * 100) : 0;
   const mortgageWidthPct = propertyValue > 0 ? Math.max(0, (mortgageBalance / propertyValue) * 100) : 0;
 
-  const maxPayment = Math.max(1, Math.round(monthlyRent * MAX_RENT_SHARE));
-  const termFactor = BASE_TERM_YEARS / term;
-  const minPayment = Math.min(maxPayment, Math.round(monthlyRent * MIN_RENT_SHARE * termFactor));
-  const selectedPayment = Math.round(minPayment + (maxPayment - minPayment) * (paymentPercent / 100));
+  const termMonths = term * 12;
+  const nominalMonthlyRate = paymentMethod === "fixed" ? RATE_TABLE_FIXED[term] : RATE_TABLE_SHARE[term];
+  const effectiveMonthlyRate = nominalMonthlyRate - RATE_ADJUSTMENT;
+
+  // Rent-share floor: proportional to the fraction of property value released.
+  const releasedShareOfProperty = propertyValue > 0 ? financingAmount / propertyValue : 0;
+  const minPaymentExact = releasedShareOfProperty * monthlyRent;
+  const minPayment = Math.round(minPaymentExact);
+
+  const fullMonthlyInterest = financingAmount * effectiveMonthlyRate;
+  const maxPayment = Math.round(minPaymentExact + fullMonthlyInterest);
+
+  const paymentFraction = Math.max(0, Math.min(1, paymentPercent / 100));
+  const financeMo = fullMonthlyInterest * paymentFraction;
+  const selectedPayment = Math.round(minPaymentExact + financeMo);
   const paymentOption = paymentOptionFromPercent(paymentPercent);
 
-  const baseInterestPerMonth = Math.round(financingAmount * MONTHLY_INTEREST_RATE);
-  const interestCostPerMonth = Math.max(0, baseInterestPerMonth - selectedPayment);
+  const interestCostPerMonth = Math.round(financeMo);
   const totalMonthlyPayment = selectedPayment;
 
-  const termMonths = term * 12;
-  const unpaidInterest = interestCostPerMonth * termMonths;
+  // Compounded interest that accrues if nothing is paid toward it, per the term's nominal rate.
+  const fullyDeferredInterest = Math.max(0, financingAmount * (Math.pow(1 + nominalMonthlyRate, termMonths) - 1));
+  const unpaidInterest = fullyDeferredInterest * (1 - paymentFraction);
   const finalRepayment = financingAmount + unpaidInterest;
 
-  const worstCaseUnpaidInterest = Math.max(0, baseInterestPerMonth - minPayment) * termMonths;
-  const savingsOverall = Math.max(0, worstCaseUnpaidInterest - unpaidInterest);
+  const totalInterestPaid = financeMo * termMonths + unpaidInterest;
+  const savingsOverall = Math.max(0, fullyDeferredInterest - totalInterestPaid);
 
   function startEditingFinancingAmount() {
     setFinancingAmountInput(formatMoney(financingAmount));
@@ -157,7 +171,7 @@ export default function EquityCalculator() {
             <div className="flex w-full max-w-[538px] flex-col gap-3">
               <div className="flex w-full items-center justify-between">
                 <span className="text-[13px] font-medium leading-[19.5px] tracking-[-0.24px] text-[#6b6d6b]">
-                  £0
+                  {formatMoney(MIN_FINANCING_AMOUNT)}
                 </span>
                 <span className="text-[13px] font-medium leading-[19.5px] tracking-[-0.24px] text-[#6b6d6b]">
                   {formatMoney(equity)}
@@ -167,13 +181,20 @@ export default function EquityCalculator() {
                 <div className="relative h-1 w-full overflow-hidden rounded-full bg-[#eee]">
                   <div
                     className="absolute inset-y-0 left-0 bg-brand"
-                    style={{ width: `${equity > 0 ? (financingAmount / equity) * 100 : 0}%` }}
+                    style={{
+                      width: `${
+                        equity > MIN_FINANCING_AMOUNT
+                          ? ((financingAmount - MIN_FINANCING_AMOUNT) / (equity - MIN_FINANCING_AMOUNT)) * 100
+                          : 0
+                      }%`,
+                    }}
                   />
                 </div>
                 <input
                   type="range"
-                  min={0}
-                  max={Math.max(equity, 1)}
+                  min={MIN_FINANCING_AMOUNT}
+                  max={Math.max(equity, MIN_FINANCING_AMOUNT + 1)}
+                  step={FINANCING_AMOUNT_STEP}
                   value={financingAmount}
                   onChange={(e) => setFinancingAmountRaw(Number(e.target.value))}
                   className="range-thumb absolute inset-0 h-1 w-full cursor-pointer appearance-none bg-transparent"
@@ -255,9 +276,29 @@ export default function EquityCalculator() {
                   <span className="text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">Mortgage</span>
                 </div>
               </div>
-              <div className="flex h-[26px] items-center justify-center rounded-full border border-[#d48400] bg-white px-[13px]">
-                <span className="whitespace-nowrap text-xs font-semibold tracking-[-0.24px] text-[#d48400]">
-                  {equityPercent >= 70 ? "Near limit" : "Within limit"}
+              <div
+                className={`flex h-[26px] items-center justify-center rounded-full border bg-white px-[13px] ${
+                  financingAmount > FINANCING_LIMIT
+                    ? "border-[#dc2626]"
+                    : financingAmount === FINANCING_LIMIT
+                      ? "border-[#d48400]"
+                      : "border-[#1f8a5b]"
+                }`}
+              >
+                <span
+                  className={`whitespace-nowrap text-xs font-semibold tracking-[-0.24px] ${
+                    financingAmount > FINANCING_LIMIT
+                      ? "text-[#dc2626]"
+                      : financingAmount === FINANCING_LIMIT
+                        ? "text-[#d48400]"
+                        : "text-[#1f8a5b]"
+                  }`}
+                >
+                  {financingAmount > FINANCING_LIMIT
+                    ? "Above our limit"
+                    : financingAmount === FINANCING_LIMIT
+                      ? "Near our limit"
+                      : "Comfortably in range"}
                 </span>
               </div>
             </div>
@@ -504,7 +545,7 @@ export default function EquityCalculator() {
                   </span>
                 </div>
                 <span className="font-heading text-lg font-bold tracking-[-0.24px] text-dark">
-                  {formatMoney(totalMonthlyPayment)}/mo
+                  {formatMoney(minPayment)}/mo
                 </span>
               </div>
 
@@ -514,7 +555,7 @@ export default function EquityCalculator() {
                 <div className="flex flex-col items-start gap-0.5">
                   <span className="text-sm font-medium tracking-[-0.24px] text-[#320707]">Interest cost</span>
                   <span className="text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">
-                    <span className="font-semibold text-brand">{(MONTHLY_INTEREST_RATE * 100).toFixed(2)}%</span> per month
+                    <span className="font-semibold text-brand">{(effectiveMonthlyRate * 100).toFixed(2)}%</span> per month
                   </span>
                 </div>
                 <span className="font-heading text-lg font-bold tracking-[-0.24px] text-dark">
