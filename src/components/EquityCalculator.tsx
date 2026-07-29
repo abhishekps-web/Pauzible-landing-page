@@ -494,7 +494,7 @@ export default function EquityCalculator() {
                     {paymentOption === "mixed" && <span className="mx-auto mt-[3px] block size-[8px] rounded-full bg-brand" />}
                   </span>
                   <span className={`whitespace-nowrap text-xs font-semibold tracking-[-0.24px] sm:text-sm ${paymentOption === "mixed" ? "text-brand" : "text-[#6b6d6b]"}`}>
-                    Custom
+                    Mixed partially
                   </span>
                 </button>
                 <button
