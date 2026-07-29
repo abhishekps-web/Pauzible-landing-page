@@ -1,0 +1,14 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Toast Icon" clip-path="url(#clip0_0_14)">
+<path id="Vector" d="M9.16667 12.5002H10.8333C11.2754 12.5002 11.6993 12.3246 12.0118 12.012C12.3244 11.6995 12.5 11.2756 12.5 10.8335C12.5 10.3915 12.3244 9.96759 12.0118 9.65503C11.6993 9.34247 11.2754 9.16687 10.8333 9.16687H8.33333C7.83333 9.16687 7.41667 9.33354 7.16667 9.66687L2.5 14.1669" stroke="#1F8A5B" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M5.83398 17.4997L7.16732 16.3331C7.41732 15.9997 7.83398 15.8331 8.33398 15.8331H11.6673C12.584 15.8331 13.4173 15.4997 14.0007 14.8331L17.834 11.1664C18.1556 10.8625 18.3432 10.4433 18.3557 10.001C18.3682 9.55877 18.2045 9.12965 17.9007 8.80807C17.5968 8.4865 17.1776 8.29881 16.7353 8.28631C16.293 8.27381 15.8639 8.43751 15.5423 8.7414L12.0423 11.9914" stroke="#1F8A5B" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_3" d="M1.66602 13.333L6.66602 18.333" stroke="#1F8A5B" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_4" d="M13.3337 9.91683C14.6683 9.91683 15.7503 8.83485 15.7503 7.50016C15.7503 6.16547 14.6683 5.0835 13.3337 5.0835C11.999 5.0835 10.917 6.16547 10.917 7.50016C10.917 8.83485 11.999 9.91683 13.3337 9.91683Z" stroke="#1F8A5B" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_5" d="M5 6.66687C6.38071 6.66687 7.5 5.54758 7.5 4.16687C7.5 2.78616 6.38071 1.66687 5 1.66687C3.61929 1.66687 2.5 2.78616 2.5 4.16687C2.5 5.54758 3.61929 6.66687 5 6.66687Z" stroke="#1F8A5B" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_0_14">
+<rect width="20" height="20" fill="white"/>
+</clipPath>
+</defs>
+</svg>
