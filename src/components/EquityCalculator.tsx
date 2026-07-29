@@ -440,7 +440,8 @@ export default function EquityCalculator() {
                   </p>
                   <p className={`text-xs font-medium ${paymentMethod === "fixed" ? "text-white/80" : "text-[#6b6d6b]"}`}>
                     Set
-                    <br />
+                    <br className="sm:hidden" />
+                    <span className="hidden sm:inline">{" "}</span>
                     upfront
                   </p>
                 </button>
