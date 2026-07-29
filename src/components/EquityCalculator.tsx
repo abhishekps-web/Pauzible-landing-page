@@ -13,6 +13,7 @@ const RATE_ADJUSTMENT = 0.0016666666666666668; // flat monthly offset baked into
 const FINANCING_LIMIT = 100000; // threshold above which the financing amount is flagged as out of range
 const MIN_FINANCING_AMOUNT = 10000; // lower bound of the financing amount slider
 const FINANCING_AMOUNT_STEP = 2500; // slider increment/decrement step
+const ADJUSTMENT_RANGE_PERCENT = 10; // Share Value mode: property value swing shown at the adjustment slider's endpoints
 
 function formatMoney(amount: number) {
   return `£${Math.max(0, Math.round(amount)).toLocaleString("en-GB")}`;
@@ -21,6 +22,12 @@ function formatMoney(amount: number) {
 function formatK(amount: number) {
   const rounded = Math.max(0, Math.round(amount));
   return rounded >= 1000 ? `£${Math.round(rounded / 1000)}K` : `£${rounded}`;
+}
+
+function formatSignedK(amount: number) {
+  const rounded = Math.round(amount);
+  if (rounded === 0) return formatK(0);
+  return `${rounded > 0 ? "+" : "−"}${formatK(Math.abs(rounded))}`;
 }
 
 function paymentOptionFromPercent(percent: number): PaymentOption {
@@ -39,6 +46,7 @@ export default function EquityCalculator() {
   const [monthlyRent, setMonthlyRent] = useState(1667);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("fixed");
   const [paymentPercent, setPaymentPercent] = useState(0);
+  const [adjustmentPercent, setAdjustmentPercent] = useState(0);
 
   const equity = Math.max(propertyValue - mortgageBalance, 0);
   const financingAmount = Math.max(MIN_FINANCING_AMOUNT, Math.min(financingAmountRaw, equity));
@@ -76,6 +84,23 @@ export default function EquityCalculator() {
 
   const totalInterestPaid = financeMo * termMonths + unpaidInterest;
   const savingsOverall = Math.max(0, fullyDeferredInterest - totalInterestPaid);
+
+  // Share Value mode: the released amount is linked to property value, so a hypothetical
+  // property value move over the term scales the final repayment proportionally.
+  const computeFinalRepaymentAtAdjustment = (percent: number) => {
+    const adjustedFinancingAmount = financingAmount * (1 + percent / 100);
+    const adjustedFullyDeferredInterest = Math.max(
+      0,
+      adjustedFinancingAmount * (Math.pow(1 + nominalMonthlyRate, termMonths) - 1)
+    );
+    const adjustedUnpaidInterest = adjustedFullyDeferredInterest * (1 - paymentFraction);
+    return adjustedFinancingAmount + adjustedUnpaidInterest;
+  };
+  const adjustedFinalRepayment = computeFinalRepaymentAtAdjustment(adjustmentPercent);
+  const adjustmentAmount = adjustedFinalRepayment - finalRepayment;
+  const fallsAdjustmentAmount = computeFinalRepaymentAtAdjustment(-ADJUSTMENT_RANGE_PERCENT) - finalRepayment;
+  const risesAdjustmentAmount = computeFinalRepaymentAtAdjustment(ADJUSTMENT_RANGE_PERCENT) - finalRepayment;
+  const displayedFinalRepayment = paymentMethod === "share" ? adjustedFinalRepayment : finalRepayment;
 
   function startEditingFinancingAmount() {
     setFinancingAmountInput(formatMoney(financingAmount));
@@ -414,7 +439,9 @@ export default function EquityCalculator() {
                     Fixed Amount
                   </p>
                   <p className={`text-xs font-medium ${paymentMethod === "fixed" ? "text-white/80" : "text-[#6b6d6b]"}`}>
-                    Set upfront
+                    Set
+                    <br />
+                    upfront
                   </p>
                 </button>
                 <button
@@ -466,7 +493,7 @@ export default function EquityCalculator() {
                     {paymentOption === "mixed" && <span className="mx-auto mt-[3px] block size-[8px] rounded-full bg-brand" />}
                   </span>
                   <span className={`whitespace-nowrap text-xs font-semibold tracking-[-0.24px] sm:text-sm ${paymentOption === "mixed" ? "text-brand" : "text-[#6b6d6b]"}`}>
-                    Mixed partially
+                    Custom
                   </span>
                 </button>
                 <button
@@ -597,12 +624,73 @@ export default function EquityCalculator() {
 
               <div className="h-px w-full bg-[#d9d9d9]" />
 
+              {paymentMethod === "share" && (
+                <div className="flex w-full flex-col items-start gap-4">
+                  <p className="text-sm leading-[20px] tracking-[-0.24px] text-[#6b6d6b]">
+                    You have chosen <strong className="font-bold text-[#320707]">Property value-linked</strong> so the
+                    final amount moves with your property&apos;s value.
+                  </p>
+
+                  <div className="flex w-full items-center justify-between">
+                    <span className="text-sm font-medium tracking-[-0.24px] text-[#320707]">Adjustment amount</span>
+                    <span className="font-heading text-[17px] font-bold tracking-[-0.24px] text-[#320707]">
+                      {formatSignedK(adjustmentAmount)}
+                    </span>
+                  </div>
+
+                  <div className="flex w-full flex-col gap-3">
+                    <div className="relative flex h-1 w-full items-center">
+                      <div
+                        className="pointer-events-none relative h-1 w-full overflow-hidden rounded-full"
+                        style={{ backgroundImage: "linear-gradient(to right, #9bd878, #f4e9de, #f9c579)" }}
+                      />
+                      <span className="pointer-events-none absolute left-[1.5%] top-1/2 size-[7px] -translate-y-1/2 rounded-full bg-[#9bd878]" />
+                      <span className="pointer-events-none absolute right-[1.5%] top-1/2 size-[7px] -translate-y-1/2 rounded-full bg-[#f9c579]" />
+                      <input
+                        type="range"
+                        min={-ADJUSTMENT_RANGE_PERCENT}
+                        max={ADJUSTMENT_RANGE_PERCENT}
+                        step={ADJUSTMENT_RANGE_PERCENT}
+                        value={adjustmentPercent}
+                        onChange={(e) => setAdjustmentPercent(Number(e.target.value))}
+                        className="range-thumb absolute inset-0 h-1 w-full cursor-pointer appearance-none bg-transparent"
+                        aria-label="Property value adjustment"
+                      />
+                    </div>
+                    <div className="flex w-full items-start justify-between">
+                      <div className="flex flex-col items-start gap-0.5">
+                        <span className="whitespace-nowrap text-xs font-semibold tracking-[-0.24px] text-[#4a7a1e]">
+                          Falls: {formatSignedK(fallsAdjustmentAmount)}
+                        </span>
+                        <span className="whitespace-nowrap text-xs tracking-[-0.24px] text-[#6b6d6b]">
+                          ({ADJUSTMENT_RANGE_PERCENT}% lower)
+                        </span>
+                      </div>
+                      <div className="flex flex-col items-center gap-0.5">
+                        <span className="whitespace-nowrap text-xs font-semibold tracking-[-0.24px] text-dark">
+                          Unchanged: £0
+                        </span>
+                        <span className="whitespace-nowrap text-xs tracking-[-0.24px] text-[#6b6d6b]">(as today)</span>
+                      </div>
+                      <div className="flex flex-col items-end gap-0.5">
+                        <span className="whitespace-nowrap text-xs font-semibold tracking-[-0.24px] text-[#d48400]">
+                          Rises: {formatSignedK(risesAdjustmentAmount)}
+                        </span>
+                        <span className="whitespace-nowrap text-xs tracking-[-0.24px] text-[#6b6d6b]">
+                          ({ADJUSTMENT_RANGE_PERCENT}% higher)
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="flex w-full items-center justify-between rounded-2xl bg-[#320707] px-[18px] py-4">
                 <span className="font-heading text-base font-medium tracking-[-0.24px] text-white">
                   Paid at the end of the term
                 </span>
                 <span className="font-heading text-2xl font-extrabold leading-[39px] tracking-[-0.24px] text-[#d6f39f]">
-                  {formatK(finalRepayment)}
+                  {formatK(displayedFinalRepayment)}
                 </span>
               </div>
             </div>

@@ -36,7 +36,9 @@ export default function RootLayout({
       lang="en"
       className={`scroll-smooth ${outfit.variable} ${inter.variable} ${firaSansCondensed.variable}`}
     >
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <div className="mx-auto w-full max-w-[1440px]">{children}</div>
+      </body>
     </html>
   );
 }
