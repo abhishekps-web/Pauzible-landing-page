@@ -81,8 +81,8 @@ export default function EquityCalculator() {
   }
 
   return (
-    <section className="flex flex-col items-center bg-white px-5 pb-16 sm:px-8 md:px-20 md:pb-24">
-      <div className="flex w-[1280px] max-w-full flex-col items-center gap-8 overflow-hidden rounded-[24px] bg-gradient-to-r from-[#fbf5ef] via-[#fde2e8] to-[#f4e9de] px-5 py-10 sm:px-8 md:gap-10 md:rounded-[32px] md:px-16 md:py-[72px]">
+    <section className="flex flex-col items-center bg-white pb-16 sm:px-5 md:px-20 md:pb-24">
+      <div className="flex w-[1280px] max-w-full flex-col items-center gap-8 overflow-hidden bg-gradient-to-r from-[#fbf5ef] via-[#fde2e8] to-[#f4e9de] px-5 py-10 sm:rounded-[24px] sm:px-8 md:gap-10 md:rounded-[32px] md:px-16 md:py-[72px]">
         {/* Header */}
         <div className="flex w-full max-w-[1024px] flex-col items-center gap-2">
           <div className="flex h-[34px] items-center justify-center border-b-2 border-[#c4c4c4]">
