@@ -91,7 +91,7 @@ function BenefitCard({
             height={size.height - 2}
             rx={23}
             fill="none"
-            stroke="#E990B7"
+            stroke="#C77C9C"
             strokeWidth={2}
             pathLength={1}
             strokeDasharray={1}
@@ -156,7 +156,7 @@ export default function GrowYourWealth() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section className="flex flex-col items-start gap-10 bg-white px-5 pb-16 sm:px-8 lg:flex-row lg:gap-25 lg:px-20 lg:pb-28">
+    <section className="flex flex-col items-start gap-10 bg-white px-5 pb-16 sm:px-8 lg:flex-row lg:gap-25 lg:px-20 lg:pb-8">
       <div className="flex w-full shrink-0 flex-col gap-6 py-8 sm:gap-8 lg:sticky lg:top-8 lg:w-[571px] lg:max-w-full lg:py-18">
         <p className="w-full font-heading text-3xl font-bold leading-tight tracking-tight text-dark sm:text-4xl lg:text-[48px] lg:leading-[56px] lg:tracking-[-1.5px]">
           Grow your wealth with Pauzible

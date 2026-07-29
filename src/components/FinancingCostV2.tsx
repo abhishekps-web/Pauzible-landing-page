@@ -121,7 +121,7 @@ export default function FinancingCostV2() {
   const [repaymentTab, setRepaymentTab] = useState<RepaymentTab>("base");
 
   return (
-    <section className="flex flex-col items-start gap-10 bg-white px-5 pb-16 pt-10 sm:px-8 lg:gap-16 lg:px-20 lg:pb-24 lg:pt-16">
+    <section className="flex flex-col items-start gap-10 bg-white px-5 pb-16 pt-10 sm:px-8 lg:gap-16 lg:px-20 lg:pb-30 lg:pt-16">
       <div className="flex w-full flex-col items-center gap-4 text-center">
         <p className="font-heading text-3xl font-bold leading-tight tracking-tight text-dark sm:text-4xl lg:text-[48px] lg:leading-[56px] lg:tracking-[-1.5px]">
           Financing cost, your way
