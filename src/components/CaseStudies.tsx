@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 type CaseStudy = {
@@ -10,6 +10,42 @@ type CaseStudy = {
   heading: string;
   body: React.ReactNode;
 };
+
+function CardBody({ caseStudy }: { caseStudy: CaseStudy }) {
+  return (
+    <div className="flex flex-col gap-3 py-5 md:px-[22px]">
+      <p className="font-heading text-xl font-bold leading-8 tracking-[-1px] text-dark md:text-2xl">
+        {caseStudy.heading}
+      </p>
+      <p className="text-base leading-6 tracking-[-0.16px] text-dark">{caseStudy.body}</p>
+    </div>
+  );
+}
+
+function CaseStudyCard({ caseStudy }: { caseStudy: CaseStudy }) {
+  return (
+    <>
+      <div className="relative h-[280px] w-full shrink-0 md:h-[457px] md:w-[609px]">
+        <Image src={caseStudy.image} alt={caseStudy.alt} fill className="object-cover" />
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage: "linear-gradient(164.62deg, rgba(30,30,30,0.55) 2%, rgba(0,0,0,0) 34%)",
+          }}
+        />
+        <div className="absolute left-6 top-6 flex items-center gap-1 rounded-xl bg-white/25 px-2 py-2 text-white backdrop-blur-md">
+          <span className="text-xl leading-5">·</span>
+          <span className="whitespace-nowrap text-base font-semibold leading-6 tracking-[-0.44px]">
+            {caseStudy.badge}
+          </span>
+        </div>
+      </div>
+      <div className="flex flex-1 items-center justify-center border border-black/10 bg-[#f5f5f5] p-5 md:p-6">
+        <CardBody caseStudy={caseStudy} />
+      </div>
+    </>
+  );
+}
 
 const caseStudies: CaseStudy[] = [
   {
@@ -52,11 +88,14 @@ const caseStudies: CaseStudy[] = [
 ];
 
 const TRANSITION_MS = 250;
+const SWIPE_THRESHOLD_PX = 50;
 
 export default function CaseStudies() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [displayIndex, setDisplayIndex] = useState(0);
   const isFading = activeIndex !== displayIndex;
+  const touchStartX = useRef<number | null>(null);
+  const touchDeltaX = useRef(0);
 
   const isFirst = activeIndex === 0;
   const isLast = activeIndex === caseStudies.length - 1;
@@ -77,7 +116,25 @@ export default function CaseStudies() {
     setActiveIndex((current) => current + 1);
   };
 
-  const activeCaseStudy = caseStudies[displayIndex];
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchDeltaX.current = 0;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    touchDeltaX.current = e.touches[0].clientX - touchStartX.current;
+  };
+
+  const handleTouchEnd = () => {
+    if (touchDeltaX.current <= -SWIPE_THRESHOLD_PX) {
+      goToNext();
+    } else if (touchDeltaX.current >= SWIPE_THRESHOLD_PX) {
+      goToPrevious();
+    }
+    touchStartX.current = null;
+    touchDeltaX.current = 0;
+  };
 
   return (
     <section className="flex flex-col items-center gap-8 bg-white px-5 pb-16 sm:px-8 md:gap-12 md:px-20 md:pb-24">
@@ -94,46 +151,33 @@ export default function CaseStudies() {
 
       <div className="flex w-[1188px] max-w-full flex-col items-center gap-6 md:gap-8">
         <div className="relative w-full">
-          <div
-            className="flex w-full flex-col overflow-hidden rounded-3xl transition-all ease-in-out md:flex-row"
-            style={{
-              transitionDuration: `${TRANSITION_MS}ms`,
-              opacity: isFading ? 0 : 1,
-              transform: isFading ? "translateX(8px)" : "translateX(0)",
-            }}
-          >
-            <div className="relative h-[280px] w-full shrink-0 md:h-[457px] md:w-[609px]">
-              <Image
-                src={activeCaseStudy.image}
-                alt={activeCaseStudy.alt}
-                fill
-                className="object-cover"
-              />
-              <div
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(164.62deg, rgba(30,30,30,0.55) 2%, rgba(0,0,0,0) 34%)",
-                }}
-              />
-              <div className="absolute left-6 top-6 flex items-center gap-1 rounded-xl bg-white/25 px-2 py-2 text-white backdrop-blur-md">
-                <span className="text-xl leading-5">·</span>
-                <span className="whitespace-nowrap text-base font-semibold leading-6 tracking-[-0.44px]">
-                  {activeCaseStudy.badge}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex flex-1 items-center justify-center border border-black/10 bg-[#f5f5f5] p-5 md:p-6">
-              <div className="flex flex-col gap-3 py-5 md:px-[22px]">
-                <p className="font-heading text-xl font-bold leading-8 tracking-[-1px] text-dark md:text-2xl">
-                  {activeCaseStudy.heading}
-                </p>
-                <p className="text-base leading-6 tracking-[-0.16px] text-dark">
-                  {activeCaseStudy.body}
-                </p>
-              </div>
-            </div>
+          {/* Grid-stack: every case study is mounted at once, occupying the same cell, so the
+              row's height is always the tallest card among them — the card never resizes when
+              the slide changes, and stays in sync automatically if copy is edited later. */}
+          <div className="grid w-full grid-cols-1 overflow-hidden rounded-3xl">
+            {caseStudies.map((caseStudy, index) => {
+              const isVisible = index === displayIndex;
+              const isSettled = isVisible && !isFading;
+              return (
+                <div
+                  key={caseStudy.heading}
+                  className={`col-start-1 row-start-1 flex touch-pan-y flex-col transition-all ease-in-out md:flex-row ${
+                    isVisible ? "" : "pointer-events-none"
+                  }`}
+                  style={{
+                    transitionDuration: `${TRANSITION_MS}ms`,
+                    opacity: isSettled ? 1 : 0,
+                    transform: isSettled ? "translateX(0)" : "translateX(8px)",
+                  }}
+                  aria-hidden={!isVisible}
+                  onTouchStart={isVisible ? handleTouchStart : undefined}
+                  onTouchMove={isVisible ? handleTouchMove : undefined}
+                  onTouchEnd={isVisible ? handleTouchEnd : undefined}
+                >
+                  <CaseStudyCard caseStudy={caseStudy} />
+                </div>
+              );
+            })}
           </div>
 
           <button
@@ -143,8 +187,8 @@ export default function CaseStudies() {
             disabled={isFirst}
             className={
               isFirst
-                ? "absolute left-2 top-[140px] flex size-9 -translate-y-1/2 cursor-not-allowed items-center justify-center rounded-[22px] bg-brand/30 shadow-[0px_4px_8px_0px_rgba(56,56,56,0.1)] md:left-[-56px] md:top-1/2 md:size-11"
-                : "absolute left-2 top-[140px] flex size-9 -translate-y-1/2 items-center justify-center rounded-[22px] border border-[#e5e7eb] bg-brand shadow-[0px_4px_4px_0px_rgba(56,56,56,0.1)] transition-colors md:left-[-56px] md:top-1/2 md:size-11"
+                ? "absolute left-2 top-[140px] hidden size-9 -translate-y-1/2 cursor-not-allowed items-center justify-center rounded-[22px] bg-brand/30 shadow-[0px_4px_8px_0px_rgba(56,56,56,0.1)] md:left-[-56px] md:top-1/2 md:flex md:size-11"
+                : "absolute left-2 top-[140px] hidden size-9 -translate-y-1/2 items-center justify-center rounded-[22px] border border-[#e5e7eb] bg-brand shadow-[0px_4px_4px_0px_rgba(56,56,56,0.1)] transition-colors md:left-[-56px] md:top-1/2 md:flex md:size-11"
             }
           >
             <Image src="/case-studies/prev-arrow.svg" alt="" width={20} height={20} />
@@ -156,8 +200,8 @@ export default function CaseStudies() {
             disabled={isLast}
             className={
               isLast
-                ? "absolute right-2 top-[140px] flex size-9 -translate-y-1/2 cursor-not-allowed items-center justify-center rounded-[22px] bg-brand/30 shadow-[0px_4px_8px_0px_rgba(56,56,56,0.1)] md:right-[-56px] md:top-1/2 md:size-11"
-                : "absolute right-2 top-[140px] flex size-9 -translate-y-1/2 items-center justify-center rounded-[22px] border border-[#e5e7eb] bg-brand shadow-[0px_4px_4px_0px_rgba(56,56,56,0.1)] transition-colors md:right-[-56px] md:top-1/2 md:size-11"
+                ? "absolute right-2 top-[140px] hidden size-9 -translate-y-1/2 cursor-not-allowed items-center justify-center rounded-[22px] bg-brand/30 shadow-[0px_4px_8px_0px_rgba(56,56,56,0.1)] md:right-[-56px] md:top-1/2 md:flex md:size-11"
+                : "absolute right-2 top-[140px] hidden size-9 -translate-y-1/2 items-center justify-center rounded-[22px] border border-[#e5e7eb] bg-brand shadow-[0px_4px_4px_0px_rgba(56,56,56,0.1)] transition-colors md:right-[-56px] md:top-1/2 md:flex md:size-11"
             }
           >
             <Image src="/case-studies/next-arrow.svg" alt="" width={20} height={20} />

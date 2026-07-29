@@ -3,10 +3,32 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
+type DropdownKey = "resources" | "company";
+
+const DROPDOWNS: Record<DropdownKey, { label: string; items: { label: string; href: string }[] }> = {
+  resources: {
+    label: "Resources",
+    items: [
+      { label: "Knowledge hub", href: "#" },
+      { label: "Insights", href: "#" },
+    ],
+  },
+  company: {
+    label: "Company",
+    items: [
+      { label: "About Us", href: "#" },
+      { label: "FAQ", href: "#faq" },
+    ],
+  },
+};
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<DropdownKey | null>(null);
+  const [openMobileDropdown, setOpenMobileDropdown] = useState<DropdownKey | null>(null);
   const lastScrollY = useRef(0);
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     lastScrollY.current = window.scrollY;
@@ -18,7 +40,10 @@ export default function Navbar() {
       const shouldHide = scrolledDown && pastThreshold;
 
       setIsHidden(shouldHide);
-      if (shouldHide) setIsMenuOpen(false);
+      if (shouldHide) {
+        setIsMenuOpen(false);
+        setOpenDropdown(null);
+      }
       lastScrollY.current = currentScrollY;
     };
 
@@ -26,8 +51,22 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!openDropdown) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setOpenDropdown(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [openDropdown]);
+
   return (
     <nav
+      ref={navRef}
       className={`fixed left-1/2 top-4 z-50 w-[1280px] max-w-[calc(100%-24px)] -translate-x-1/2 rounded-2xl border border-[#fce7f3] bg-gradient-to-r from-[#fff5f7] via-[#fde2e8] to-[rgba(251,207,232,0.3)] px-4 py-2.5 shadow-[0_4px_6px_rgba(252,206,232,0.4),0_2px_4px_rgba(252,206,232,0.4)] transition-transform duration-300 ease-in-out lg:top-12 lg:max-w-[calc(100%-40px)] lg:px-[25px] lg:py-[13px] ${
         isHidden ? "-translate-y-[calc(100%+32px)] lg:-translate-y-[calc(100%+64px)]" : "translate-y-0"
       }`}
@@ -48,47 +87,65 @@ export default function Navbar() {
         {/* Nav links */}
         <div className="hidden items-center gap-6 lg:flex">
           <a
-            href="#"
+            href="#what-is-pauzible"
+            className="cursor-pointer whitespace-nowrap text-sm font-medium leading-5 tracking-[-0.24px] text-dark no-underline"
+          >
+            What is Pauzible
+          </a>
+          <a
+            href="#equity-calculator"
             className="cursor-pointer whitespace-nowrap text-sm font-medium leading-5 tracking-[-0.24px] text-dark no-underline"
           >
             Calculator
           </a>
-          <div
-            className="flex cursor-pointer items-center gap-1"
-            role="button"
-            tabIndex={0}
-            aria-haspopup="true"
-          >
-            <span className="whitespace-nowrap text-sm font-medium leading-5 tracking-[-0.24px] text-dark">
-              Resources
-            </span>
-            <Image
-              className="shrink-0"
-              src="/chevron-down.svg"
-              width={12}
-              height={12}
-              alt=""
-              aria-hidden="true"
-            />
-          </div>
-          <div
-            className="flex cursor-pointer items-center gap-1"
-            role="button"
-            tabIndex={0}
-            aria-haspopup="true"
-          >
-            <span className="whitespace-nowrap text-sm font-medium leading-5 tracking-[-0.24px] text-dark">
-              Company
-            </span>
-            <Image
-              className="shrink-0"
-              src="/chevron-down.svg"
-              width={12}
-              height={12}
-              alt=""
-              aria-hidden="true"
-            />
-          </div>
+          {(Object.keys(DROPDOWNS) as DropdownKey[]).map((key) => {
+            const dropdown = DROPDOWNS[key];
+            const isOpen = openDropdown === key;
+            return (
+              <div key={key} className="relative">
+                <div
+                  className="flex cursor-pointer items-center gap-1"
+                  role="button"
+                  tabIndex={0}
+                  aria-haspopup="true"
+                  aria-expanded={isOpen}
+                  onClick={() => setOpenDropdown((prev) => (prev === key ? null : key))}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setOpenDropdown((prev) => (prev === key ? null : key));
+                    }
+                  }}
+                >
+                  <span className="whitespace-nowrap text-sm font-medium leading-5 tracking-[-0.24px] text-dark">
+                    {dropdown.label}
+                  </span>
+                  <Image
+                    className={`shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                    src="/chevron-down.svg"
+                    width={12}
+                    height={12}
+                    alt=""
+                    aria-hidden="true"
+                  />
+                </div>
+                {isOpen && (
+                  <div className="absolute left-0 top-full mt-2 flex min-w-[180px] flex-col gap-1 rounded-2xl border border-[#fce7f3] bg-white p-2 shadow-[0_10px_24px_rgba(131,13,65,0.12)]">
+                    {dropdown.items.map((item) => (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        onClick={() => setOpenDropdown(null)}
+                        className="cursor-pointer whitespace-nowrap rounded-xl px-3 py-2 text-sm font-medium leading-5 tracking-[-0.24px] text-dark no-underline hover:bg-[#fff5f7]"
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
           <a
             href="#"
             className="cursor-pointer whitespace-nowrap text-sm font-medium leading-5 tracking-[-0.24px] text-dark no-underline"
@@ -142,47 +199,70 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="mt-4 flex flex-col items-stretch gap-1 border-t border-[#fce7f3] pt-4 lg:hidden">
           <a
-            href="#"
+            href="#what-is-pauzible"
+            onClick={() => setIsMenuOpen(false)}
+            className="cursor-pointer whitespace-nowrap rounded-xl px-3 py-2.5 text-sm font-medium leading-5 tracking-[-0.24px] text-dark no-underline"
+          >
+            What is Pauzible
+          </a>
+          <a
+            href="#equity-calculator"
+            onClick={() => setIsMenuOpen(false)}
             className="cursor-pointer whitespace-nowrap rounded-xl px-3 py-2.5 text-sm font-medium leading-5 tracking-[-0.24px] text-dark no-underline"
           >
             Calculator
           </a>
-          <div
-            className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2.5"
-            role="button"
-            tabIndex={0}
-            aria-haspopup="true"
-          >
-            <span className="whitespace-nowrap text-sm font-medium leading-5 tracking-[-0.24px] text-dark">
-              Resources
-            </span>
-            <Image
-              className="shrink-0"
-              src="/chevron-down.svg"
-              width={12}
-              height={12}
-              alt=""
-              aria-hidden="true"
-            />
-          </div>
-          <div
-            className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2.5"
-            role="button"
-            tabIndex={0}
-            aria-haspopup="true"
-          >
-            <span className="whitespace-nowrap text-sm font-medium leading-5 tracking-[-0.24px] text-dark">
-              Company
-            </span>
-            <Image
-              className="shrink-0"
-              src="/chevron-down.svg"
-              width={12}
-              height={12}
-              alt=""
-              aria-hidden="true"
-            />
-          </div>
+          {(Object.keys(DROPDOWNS) as DropdownKey[]).map((key) => {
+            const dropdown = DROPDOWNS[key];
+            const isOpen = openMobileDropdown === key;
+            return (
+              <div key={key} className="flex flex-col">
+                <div
+                  className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2.5"
+                  role="button"
+                  tabIndex={0}
+                  aria-haspopup="true"
+                  aria-expanded={isOpen}
+                  onClick={() => setOpenMobileDropdown((prev) => (prev === key ? null : key))}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setOpenMobileDropdown((prev) => (prev === key ? null : key));
+                    }
+                  }}
+                >
+                  <span className="whitespace-nowrap text-sm font-medium leading-5 tracking-[-0.24px] text-dark">
+                    {dropdown.label}
+                  </span>
+                  <Image
+                    className={`shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                    src="/chevron-down.svg"
+                    width={12}
+                    height={12}
+                    alt=""
+                    aria-hidden="true"
+                  />
+                </div>
+                {isOpen && (
+                  <div className="flex flex-col gap-1 py-1 pl-6">
+                    {dropdown.items.map((item) => (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        onClick={() => {
+                          setOpenMobileDropdown(null);
+                          setIsMenuOpen(false);
+                        }}
+                        className="cursor-pointer whitespace-nowrap rounded-xl px-3 py-2 text-sm font-medium leading-5 tracking-[-0.24px] text-[#6b6d6b] no-underline"
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
           <a
             href="#"
             className="cursor-pointer whitespace-nowrap rounded-xl px-3 py-2.5 text-sm font-medium leading-5 tracking-[-0.24px] text-dark no-underline"

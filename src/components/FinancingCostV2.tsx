@@ -92,7 +92,7 @@ const REPAYMENT_ASSETS: Record<RepaymentTab, { src: string; alt: string }> = {
 
 function CardShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative flex h-[520px] w-full flex-col items-center justify-between overflow-hidden rounded-3xl border border-[#e4e4e4] p-6 lg:flex-1">
+    <div className="relative flex h-[520px] w-full flex-col items-center justify-between overflow-hidden rounded-3xl border border-[#e4e4e4] p-6">
       <Image
         src="/financing-cost/card-bg-texture.png"
         alt=""
@@ -121,10 +121,10 @@ export default function FinancingCostV2() {
         </p>
       </div>
 
-      <div className="flex w-full flex-col items-stretch gap-5 lg:flex-row lg:items-start">
+      <div className="grid w-full grid-cols-1 items-stretch gap-5 lg:grid-cols-3">
         {/* Rent Share Card */}
         <CardShell>
-          <div className="relative h-[245px] w-[200px] shrink-0 sm:h-[336px] sm:w-[274px]">
+          <div className="relative mx-auto h-[270px] w-[220px] shrink-0 sm:h-[296px] sm:w-[241px]">
             <Image
               src="/financing-cost/rent-share-illustration.png"
               alt="Diagram showing £2,000 rent split into your £1,600 share and Pauzible's £400 share"
@@ -138,8 +138,7 @@ export default function FinancingCostV2() {
               Rent Share <span className="font-heading text-base font-semibold text-[#6b6d6b]">(Monthly)</span>
             </p>
             <p className="h-[72px] text-base font-medium leading-6 text-[#6b6d6b]">
-              In return for unlocking your equity, Pauzible receives a small share of your rent.
-            </p>
+              In return for unlocking your equity, Pauzible receives a small share of your rent.</p>
           </div>
         </CardShell>
 
@@ -167,8 +166,7 @@ export default function FinancingCostV2() {
           <div className="relative flex w-full flex-col items-start gap-2 tracking-[-0.24px]">
             <p className="font-heading text-xl font-bold text-dark">Interest Cost</p>
             <p className="h-[72px] text-base font-medium leading-6 text-[#6b6d6b]">
-              Choose to pay financing costs monthly or at the end of the financing term with monthly
-              compounding.
+              Choose to pay financing costs monthly or at the end of the financing term with monthly compounding.
             </p>
           </div>
         </CardShell>

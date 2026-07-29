@@ -5,7 +5,7 @@ import "./globals.css";
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const inter = Inter({
@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${inter.variable} ${firaSansCondensed.variable}`}
+      className={`scroll-smooth ${outfit.variable} ${inter.variable} ${firaSansCondensed.variable}`}
     >
       <body className="font-sans antialiased">{children}</body>
     </html>

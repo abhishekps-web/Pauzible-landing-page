@@ -12,32 +12,32 @@ const faqItems: FaqItem[] = [
   {
     question: "Do I give up any ownership of my property?",
     answer:
-      "No. You keep full ownership and control of your property throughout. Pauzible releases equity against the property; it doesn't buy a stake in it.",
+      "No. You keep 100% of your property and its title, start to finish. Pauzible never takes a stake. We sit behind your existing mortgage and are repaid when you exit.",
   },
   {
     question: "How much can I release, and how fast?",
     answer:
-      "The amount depends on your property value, existing mortgage, and rental income. Most landlords get an indicative offer within days and funds released shortly after.",
+      "Up to £500,000 per property subject to total LTV limits. You usually get a key-facts summary within 24 hours and the cash in about three weeks.",
   },
   {
     question: "What does it cost?",
     answer:
-      "Pauzible charges a rate on the equity released, agreed upfront with no hidden fees. Your existing mortgage rate and terms stay untouched.",
+      "Two parts. Each month you pay a small share of your rent, matching the share of the property value you release. Release a fifth, pay about a fifth of the rent.You choose whether to pay the financing cost monthly or defer it to the end of your term. The repayment is made at the end of your term: the cash you released, with any deferred financing cost growing at the applicable rate, compounded monthly.On the property value-linked option, that payment also moves with your property's value.",
   },
   {
     question: "What's the difference between Fixed and Property value-linked options?",
     answer:
-      "Fixed keeps your cost predictable regardless of how the property performs. Property value-linked ties the cost to the property's value, which can mean a lower cost if growth is modest.",
+      "It's your choice. Fixed locks the end figure up front, so you know it exactly. Property value-linked repayment amount moves with your home: pay more if it rises, less if it falls.",
   },
   {
     question: "Will it affect my existing mortgage?",
     answer:
-      "No. Your existing mortgage stays in place with its current rate and terms. Pauzible sits alongside it, secured against your remaining equity.",
+      "No. Pauzible sits behind your main mortgage, so your current rate and deal stay exactly as they are. No remortgage, no repricing on your existing mortgage.",
   },
   {
     question: "What's the term, and can I repay early?",
     answer:
-      "Terms are flexible and agreed based on your plans for the property. You can repay early, typically without penalty — details are confirmed before you commit.",
+      "Choose 2, 3 or 5 years. You can repay early at any time by paying the applicable repayment amount, and your monthly rent payments to Pauzible will stop. Just talk the timing through with us so the end figure is clear.",
   },
 ];
 
@@ -49,7 +49,7 @@ export default function FAQ() {
   };
 
   return (
-    <section className="flex flex-col items-center gap-8 bg-white px-5 pb-16 sm:px-8 md:gap-12 md:px-20 md:pb-24">
+    <section id="faq" className="flex flex-col items-center gap-8 bg-white px-5 pb-16 sm:px-8 md:gap-12 md:px-20 md:pb-24">
       <div className="flex w-[1280px] max-w-full flex-col items-center gap-4">
         <div className="flex h-[34px] items-center justify-center border-b-2 border-[#d6f39f]">
           <p className="font-heading text-xs font-bold uppercase tracking-[1.2px] text-[#6b6d6b]">
@@ -73,7 +73,7 @@ export default function FAQ() {
                   aria-expanded={isOpen}
                   className="flex w-full items-center justify-between gap-4 py-5 text-left"
                 >
-                  <span className="font-heading text-base font-medium tracking-[-0.24px] text-dark">
+                  <span className="font-heading text-base font-semibold leading-6 tracking-[-0.24px] text-dark">
                     {item.question}
                   </span>
                   <span
@@ -88,7 +88,7 @@ export default function FAQ() {
                   style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
                 >
                   <div className="overflow-hidden">
-                    <p className="pb-5 text-sm leading-6 tracking-[-0.16px] text-[#6b6d6b]">
+                    <p className="pb-5 text-base font-medium leading-6 tracking-[-0.16px] text-[#6b6d6b]">
                       {item.answer}
                     </p>
                   </div>

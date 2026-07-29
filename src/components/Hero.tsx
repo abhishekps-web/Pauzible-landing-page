@@ -55,7 +55,7 @@ export default function Hero() {
             </span>
           </a>
           <a
-            href="#"
+            href="#equity-calculator"
             className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-white px-[25px] py-[9px] no-underline"
           >
             <span className="whitespace-nowrap text-base font-semibold leading-[26px] tracking-[-0.24px] text-white lg:text-lg">
