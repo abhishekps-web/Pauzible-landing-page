@@ -124,13 +124,13 @@ export default function FinancingCostV2() {
       <div className="flex w-full flex-col items-stretch gap-5 lg:flex-row lg:items-start">
         {/* Rent Share Card */}
         <CardShell>
-          <div className="relative h-[245px] w-[200px] shrink-0 sm:h-[336px] sm:w-[274px]">
+          <div className="relative h-[245px] w-[200px] shrink-0 overflow-hidden sm:h-[336px] sm:w-[274px] sm:overflow-visible">
             <Image
               src="/financing-cost/rent-share-illustration.png"
               alt="Diagram showing £2,000 rent split into your £1,600 share and Pauzible's £400 share"
               fill
               sizes="(min-width: 640px) 274px, 200px"
-              className="object-cover"
+              className="scale-110 object-cover object-center sm:scale-100"
             />
           </div>
           <div className="relative flex w-full flex-col items-start gap-2 tracking-[-0.24px]">
