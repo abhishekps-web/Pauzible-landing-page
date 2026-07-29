@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit, Inter, Fira_Sans_Condensed } from "next/font/google";
+import { UnlockEquityDialogProvider } from "@/components/UnlockEquityDialog";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -37,7 +38,9 @@ export default function RootLayout({
       className={`scroll-smooth ${outfit.variable} ${inter.variable} ${firaSansCondensed.variable}`}
     >
       <body className="font-sans antialiased">
-        <div className="mx-auto w-full max-w-[1440px]">{children}</div>
+        <UnlockEquityDialogProvider>
+          <div className="mx-auto w-full max-w-[1440px]">{children}</div>
+        </UnlockEquityDialogProvider>
       </body>
     </html>
   );

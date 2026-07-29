@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useUnlockEquityDialog } from "@/components/UnlockEquityDialog";
 
 const FOOTER_GRADIENT =
   "linear-gradient(90deg, rgb(251,245,239) 0%, rgb(251,242,238) 7.1429%, rgb(252,240,237) 14.286%, rgb(252,237,236) 21.429%, rgb(252,234,235) 28.571%, rgb(253,231,234) 35.714%, rgb(253,229,233) 42.857%, rgb(253,226,232) 50%, rgb(252,227,231) 57.143%, rgb(250,228,229) 64.286%, rgb(249,229,228) 71.429%, rgb(248,230,226) 78.571%, rgb(247,231,225) 85.714%, rgb(245,232,223) 92.857%, rgb(244,233,222) 100%)";
@@ -46,6 +49,8 @@ function FooterLinkColumn({ heading, links }: { heading: string; links: string[]
 }
 
 export default function Footer() {
+  const { openUnlockEquityDialog } = useUnlockEquityDialog();
+
   return (
     <footer className="flex justify-center bg-white px-4 sm:px-6">
       <div className="w-full max-w-[1280px] overflow-hidden rounded-t-[32px]">
@@ -76,9 +81,10 @@ export default function Footer() {
               </a>
 
               <div className="flex flex-col items-start gap-3.5 sm:items-end">
-                <a
-                  href="#"
-                  className="flex h-10 shrink-0 items-center gap-3 rounded-full bg-brand py-1 pl-5 pr-1 no-underline"
+                <button
+                  type="button"
+                  onClick={openUnlockEquityDialog}
+                  className="flex h-10 shrink-0 items-center gap-3 rounded-full bg-brand py-1 pl-5 pr-1"
                 >
                   <span className="whitespace-nowrap text-sm font-medium tracking-[-0.24px] text-[#eee]">
                     Get started
@@ -86,7 +92,7 @@ export default function Footer() {
                   <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#eee]">
                     <Image src="/footer/icon-arrow.svg" alt="" width={16} height={16} aria-hidden="true" />
                   </span>
-                </a>
+                </button>
 
                 <div className="flex items-start gap-2">
                   {socialLinks.map(({ label, icon }) => (

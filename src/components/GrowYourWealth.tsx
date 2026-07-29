@@ -21,21 +21,84 @@ function BenefitCard({
   description: string;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const strokeRef = useRef<SVGRectElement>(null);
+  const [size, setSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const measure = () => {
+      const rect = el.getBoundingClientRect();
+      setSize({ width: rect.width, height: rect.height });
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
+
+    const setProgress = (fraction: number) => {
+      const stroke = strokeRef.current;
+      if (stroke) stroke.style.strokeDashoffset = String(1 - fraction);
+    };
+
+    let rafId: number;
+    let startTime: number | null = null;
+    const tick = (now: number) => {
+      const duration = el.duration;
+      if (duration) {
+        if (startTime === null) startTime = now;
+        const elapsed = (now - startTime) / 1000;
+        setProgress(Math.min(elapsed / duration, 1));
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+
     if (isActive) {
       el.currentTime = 0;
+      setProgress(0);
       el.play().catch(() => {});
+      rafId = requestAnimationFrame(tick);
     } else {
       el.pause();
       el.currentTime = 0;
     }
+
+    return () => cancelAnimationFrame(rafId);
   }, [isActive]);
 
   return (
-    <div className="flex w-full flex-col items-start gap-4 rounded-3xl border border-[#e8e9e8] bg-white p-4 shadow-[0_2px_3px_rgba(0,0,0,0.04)] sm:flex-row sm:items-center sm:gap-5 sm:p-[21px]">
+    <div ref={cardRef} className="relative flex w-full flex-col items-start gap-4 rounded-3xl border border-[#e8e9e8] bg-white p-4 shadow-[0_2px_3px_rgba(0,0,0,0.04)] sm:flex-row sm:items-center sm:gap-5 sm:p-[21px]">
+      {size.width > 0 && size.height > 0 && (
+        <svg
+          aria-hidden
+          className="pointer-events-none absolute inset-0 transition-opacity duration-500"
+          style={{ opacity: isActive ? 1 : 0 }}
+          width={size.width}
+          height={size.height}
+          viewBox={`0 0 ${size.width} ${size.height}`}
+        >
+          <rect
+            ref={strokeRef}
+            x={1}
+            y={1}
+            width={size.width - 2}
+            height={size.height - 2}
+            rx={23}
+            fill="none"
+            stroke="#E990B7"
+            strokeWidth={2}
+            pathLength={1}
+            strokeDasharray={1}
+            strokeDashoffset={1}
+          />
+        </svg>
+      )}
       <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-2xl sm:size-[158px]">
         {video ? (
           <video

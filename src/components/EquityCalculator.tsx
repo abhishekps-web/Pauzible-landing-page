@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useUnlockEquityDialog } from "@/components/UnlockEquityDialog";
 
 type PaymentOption = "rent" | "mixed" | "full";
 type PaymentMethod = "fixed" | "share";
@@ -37,6 +38,7 @@ function paymentOptionFromPercent(percent: number): PaymentOption {
 }
 
 export default function EquityCalculator() {
+  const { openUnlockEquityDialog } = useUnlockEquityDialog();
   const [financingAmountRaw, setFinancingAmountRaw] = useState(100000);
   const [isEditingFinancingAmount, setIsEditingFinancingAmount] = useState(false);
   const [financingAmountInput, setFinancingAmountInput] = useState("");
@@ -700,14 +702,15 @@ export default function EquityCalculator() {
 
         {/* CTA */}
         <div className="flex w-full max-w-[520px] flex-col items-center gap-3 px-6">
-          <a
-            href="#"
-            className="flex h-14 w-full items-center justify-center rounded-full bg-brand no-underline"
+          <button
+            type="button"
+            onClick={openUnlockEquityDialog}
+            className="flex h-14 w-full items-center justify-center rounded-full bg-brand"
           >
             <span className="text-lg font-semibold leading-[26px] tracking-[-0.24px] text-brand-btn-text">
               Get started
             </span>
-          </a>
+          </button>
           <p className="text-center text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">
             Illustrative example. Not a quote or offer.
           </p>

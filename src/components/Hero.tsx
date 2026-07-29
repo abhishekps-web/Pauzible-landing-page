@@ -1,6 +1,11 @@
+"use client";
+
 import Image from "next/image";
+import { useUnlockEquityDialog } from "@/components/UnlockEquityDialog";
 
 export default function Hero() {
+  const { openUnlockEquityDialog } = useUnlockEquityDialog();
+
   return (
   <section className="relative ml-[calc(50%-50vw)] flex w-screen flex-col overflow-hidden rounded-b-3xl lg:h-[690px]">
       {/* Background image */}
@@ -45,9 +50,10 @@ export default function Hero() {
           </div>
 
           <div className="flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-3.5">
-            <a
-              href="#"
-              className="inline-flex shrink-0 items-center justify-center gap-3 rounded-full bg-brand py-2 pl-6 pr-2 no-underline"
+            <button
+              type="button"
+              onClick={openUnlockEquityDialog}
+              className="inline-flex shrink-0 items-center justify-center gap-3 rounded-full bg-brand py-2 pl-6 pr-2"
             >
               <span className="whitespace-nowrap text-lg font-semibold leading-[26px] tracking-[-0.24px] text-brand-btn-text">
                 Get started
@@ -55,7 +61,7 @@ export default function Hero() {
               <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-btn-text">
                 <Image className="block" src="/arrow-white.svg" width={16} height={16} alt="" aria-hidden="true" />
               </span>
-            </a>
+            </button>
             <a
               href="#equity-calculator"
               className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-white px-[25px] py-[9px] no-underline"

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { useUnlockEquityDialog } from "@/components/UnlockEquityDialog";
 
 type DropdownKey = "resources" | "company";
 
@@ -23,6 +24,7 @@ const DROPDOWNS: Record<DropdownKey, { label: string; items: { label: string; hr
 };
 
 export default function Navbar() {
+  const { openUnlockEquityDialog } = useUnlockEquityDialog();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<DropdownKey | null>(null);
@@ -155,9 +157,10 @@ export default function Navbar() {
         </div>
 
         {/* CTA */}
-        <a
-          href="#"
-          className="hidden shrink-0 items-center gap-2 rounded-full bg-brand py-1 pl-3 pr-1 no-underline lg:inline-flex lg:gap-3 lg:pl-4"
+        <button
+          type="button"
+          onClick={openUnlockEquityDialog}
+          className="hidden shrink-0 items-center gap-2 rounded-full bg-brand py-1 pl-3 pr-1 lg:inline-flex lg:gap-3 lg:pl-4"
         >
           <span className="whitespace-nowrap text-sm font-semibold leading-6 tracking-[-0.24px] text-brand-btn-text lg:text-base">
             Unlock Equity
@@ -165,7 +168,7 @@ export default function Navbar() {
           <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-btn-text">
             <Image className="block" src="/arrow-right.svg" width={16} height={16} alt="" aria-hidden="true" />
           </span>
-        </a>
+        </button>
 
         {/* Hamburger toggle */}
         <button
