@@ -749,7 +749,7 @@ export default function EquityCalculator() {
                 <span className="font-heading text-base font-medium tracking-[-0.24px] text-white">
                   Paid at the end of the term
                 </span>
-                <span className="font-heading text-[26px] font-extrabold leading-[39px] tracking-[-0.24px] text-[#d6f39f]">
+                <span className="font-heading text-[26px] font-extrabold leading-[39px] tracking-[-0.24px] text-[#E8E9E8]">
                   {formatK(displayedFinalRepayment)}
                 </span>
               </div>

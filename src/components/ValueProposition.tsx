@@ -27,7 +27,7 @@ export default function ValueProposition() {
   return (
     <section id="what-is-pauzible" className="flex flex-col items-center gap-10 bg-white px-5 pb-16 pt-12 sm:px-8 md:gap-16 md:px-20 md:pb-20 md:pt-18">
       <div className="flex w-full max-w-[1280px] flex-col items-center gap-4 md:h-44">
-        <div className="flex h-[34px] items-center justify-center border-b-2 border-[#d6f39f]">
+        <div className="flex h-[34px] items-center justify-center border-b-2 border-[#E8E9E8]">
           <p className="font-heading text-xs font-bold uppercase tracking-[2px] text-dark">
             What is Pauzible
           </p>

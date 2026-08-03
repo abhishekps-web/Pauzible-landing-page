@@ -51,7 +51,7 @@ export default function FAQ() {
   return (
     <section id="faq" className="flex flex-col items-center gap-8 bg-white px-5 pb-16 sm:px-8 md:gap-12 md:px-20 md:pb-24">
       <div className="flex w-[1280px] max-w-full flex-col items-center gap-4">
-        <div className="flex h-[34px] items-center justify-center border-b-2 border-[#d6f39f]">
+        <div className="flex h-[34px] items-center justify-center border-b-2 border-[#E8E9E8]">
           <p className="font-heading text-xs font-bold uppercase tracking-[1.2px] text-[#6b6d6b]">
             Frequently Asked Questions
           </p>

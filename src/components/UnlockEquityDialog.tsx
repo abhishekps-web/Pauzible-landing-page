@@ -205,7 +205,7 @@ function UnlockEquityForm() {
       <div className="flex min-h-0 flex-1 flex-col">
         <div className="flex-1 overflow-y-auto p-6 sm:p-8 floating-scrollbar">
           <div className="flex flex-col items-start gap-5">
-            <div className="flex size-12 items-center justify-center rounded-full bg-[#d6f39f]">
+            <div className="flex size-12 items-center justify-center rounded-full bg-[#E8E9E8]">
               <span className="text-2xl font-bold text-dark">✓</span>
             </div>
             <div>

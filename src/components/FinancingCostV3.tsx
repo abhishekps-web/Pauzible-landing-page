@@ -23,20 +23,24 @@ function interestTabFromPercent(percent: number): InterestTab {
 
 // baseAdjustment is the fully-deferred interest adjustment (i.e. Rent share only, 0% paid monthly).
 // It scales down toward £0 as more of the interest is paid monthly (see adjustmentAmount below).
+// baseTakeAmount is Pauzible's share of the property value swing at Rent share only (0% paid monthly);
+// it scales down toward MIN_TAKE_AMOUNT as more of the interest is paid monthly (see takeAmount below).
+const MIN_TAKE_AMOUNT = 10000;
+
 const REPAYMENT_DATA: Record<
   RepaymentTab,
-  { principal: number; baseAdjustment: number; take?: { label: string; value: string; kind: "gain" | "lose" } }
+  { principal: number; baseAdjustment: number; take?: { label: string; baseTakeAmount: number; kind: "gain" | "lose" } }
 > = {
   downside: {
     principal: 100000,
     baseAdjustment: 27000,
-    take: { label: "Takes Lose", value: "- £50K", kind: "lose" },
+    take: { label: "Takes Lose", baseTakeAmount: 14000, kind: "lose" },
   },
   base: { principal: 100000, baseAdjustment: 41000 },
   upside: {
     principal: 100000,
     baseAdjustment: 55000,
-    take: { label: "Takes Gain", value: "+ £50K", kind: "gain" },
+    take: { label: "Takes Gain", baseTakeAmount: 14000, kind: "gain" },
   },
 };
 
@@ -204,11 +208,20 @@ export default function FinancingCostV3() {
   const paidMonthlyFraction = interestPercent / 100;
   const adjustmentAmount = repaymentBase.baseAdjustment * (1 - paidMonthlyFraction);
   const settlementAmount = repaymentBase.principal + adjustmentAmount;
+  const takeAmount = repaymentBase.take
+    ? repaymentBase.take.baseTakeAmount - (repaymentBase.take.baseTakeAmount - MIN_TAKE_AMOUNT) * paidMonthlyFraction
+    : 0;
   const repayment = {
     principal: formatMoneyK(repaymentBase.principal),
     adjustment: formatMoneyK(adjustmentAmount),
     settlement: formatMoneyK(settlementAmount),
-    take: repaymentBase.take,
+    take: repaymentBase.take
+      ? {
+          label: repaymentBase.take.label,
+          value: `${repaymentBase.take.kind === "gain" ? "+" : "-"} ${formatMoneyK(takeAmount)}`,
+          kind: repaymentBase.take.kind,
+        }
+      : undefined,
   };
 
   function selectInterestTab(tab: InterestTab) {

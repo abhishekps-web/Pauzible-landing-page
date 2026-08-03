@@ -114,7 +114,7 @@ function BenefitCard({
         )}
       </div>
       <div className="flex flex-1 flex-col items-start gap-2.5">
-        <div className="flex h-[34px] items-center justify-center border-b-2 border-[#d6f39f]">
+        <div className="flex h-[34px] items-center justify-center border-b-2 border-[#E8E9E8]">
           <p className="font-heading text-xs font-bold uppercase tracking-[2px] text-dark">
             {badge}
           </p>
