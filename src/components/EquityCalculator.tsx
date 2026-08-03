@@ -136,7 +136,7 @@ export default function EquityCalculator() {
 
   return (
     <section id="equity-calculator" className="flex flex-col items-center bg-white pb-16 sm:px-5 md:px-20 md:pb-24">
-      <div className="flex w-[1280px] max-w-full flex-col items-center gap-8 overflow-hidden bg-gradient-to-r from-[#fbf5ef] via-[#fde2e8] to-[#f4e9de] px-5 py-10 sm:rounded-[24px] sm:px-8 md:gap-10 md:rounded-[32px] md:px-16 md:py-[72px]">
+      <div className="flex w-[1280px] max-w-full flex-col items-center gap-8 overflow-hidden bg-gradient-to-r from-[rgba(251,245,239,0.5)] via-[rgba(253,226,232,0.5)] to-[rgba(244,233,222,0.5)] px-5 py-10 sm:rounded-[24px] sm:px-8 md:gap-10 md:rounded-[32px] md:px-16 md:py-[72px]">
         {/* Header */}
         <div className="flex w-full max-w-[1024px] flex-col items-center gap-2">
           <div className="flex h-[34px] items-center justify-center border-b-2 border-[#c4c4c4]">
@@ -155,14 +155,14 @@ export default function EquityCalculator() {
           <div className="relative grid w-full gap-y-5 rounded-[22px] bg-white p-4 drop-shadow-[0_10px_14px_rgba(131,13,65,0.18)] sm:p-[22px]">
             <div className="flex items-center gap-2.5">
               <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#FAF0F3]">
-                <span className="font-heading text-sm font-extrabold tracking-[-0.19px] text-dark">1</span>
+                <span className="font-heading text-sm font-extrabold tracking-[-0.24px] text-dark">1</span>
               </div>
-              <p className="font-heading text-base font-bold tracking-[-0.19px] text-dark sm:text-xl">
+              <p className="font-heading text-base font-semibold tracking-[-0.22px] text-dark sm:text-[22px]">
                 Enter financing amount you want to release
               </p>
             </div>
 
-            <div className="flex items-center justify-center gap-2 px-0 sm:px-5">
+            <div className="relative flex items-center justify-center px-0 sm:px-5">
               {isEditingFinancingAmount ? (
                 <input
                   type="text"
@@ -178,7 +178,7 @@ export default function EquityCalculator() {
                     if (e.key === "Enter") commitFinancingAmountInput();
                     if (e.key === "Escape") setIsEditingFinancingAmount(false);
                   }}
-                  className="w-full min-w-0 flex-1 appearance-none border-0 bg-transparent p-0 text-center font-heading text-4xl font-bold leading-none tracking-tight text-brand outline-none sm:text-[56px] sm:tracking-[-2.7px]"
+                  className="w-full min-w-0 flex-1 appearance-none border-0 bg-transparent p-0 text-center font-heading text-4xl font-extrabold leading-none tracking-tight text-brand outline-none sm:text-[48px] sm:tracking-[-1.5px]"
                 />
               ) : (
                 <p
@@ -188,7 +188,7 @@ export default function EquityCalculator() {
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") startEditingFinancingAmount();
                   }}
-                  className="flex-1 cursor-pointer text-center font-heading text-4xl font-bold tracking-tight text-brand sm:text-[56px] sm:tracking-[-2.7px]"
+                  className="flex-1 cursor-pointer text-center font-heading text-4xl font-extrabold tracking-tight text-brand sm:text-[48px] sm:tracking-[-1.5px]"
                 >
                   {formatMoney(financingAmount)}
                 </p>
@@ -197,7 +197,7 @@ export default function EquityCalculator() {
                 type="button"
                 onClick={startEditingFinancingAmount}
                 aria-label="Edit financing amount"
-                className="relative size-[30px] shrink-0 rounded-full bg-[#f5f5f5]"
+                className="absolute right-0 top-1/2 size-[30px] shrink-0 -translate-y-1/2 rounded-full border border-[#d8dad8] bg-white drop-shadow-[0_1px_1px_rgba(50,7,7,0.04)] sm:right-5"
               >
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="relative size-[14px]">
@@ -210,10 +210,10 @@ export default function EquityCalculator() {
             {/* Financing amount slider */}
             <div className="flex w-full max-w-[538px] flex-col gap-3">
               <div className="flex w-full items-center justify-between">
-                <span className="font-heading text-[13px] font-medium leading-[19.5px] tracking-[-0.24px] text-[#6b6d6b]">
+                <span className="font-heading text-base font-medium leading-5 tracking-[-0.24px] text-[#454745]">
                   {formatMoney(MIN_FINANCING_AMOUNT)}
                 </span>
-                <span className="font-heading text-[13px] font-medium leading-[19.5px] tracking-[-0.24px] text-[#6b6d6b]">
+                <span className="font-heading text-base font-medium leading-5 tracking-[-0.24px] text-[#454745]">
                   {formatMoney(equity)}
                 </span>
               </div>
@@ -246,9 +246,9 @@ export default function EquityCalculator() {
             <div className="flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center sm:gap-6">
               <div className="flex flex-1 items-center justify-between gap-2">
                 <span className="whitespace-nowrap font-heading text-sm font-semibold tracking-[-0.24px] text-[#454745]">
-                  Property value
+                  Property Value
                 </span>
-                <label className="flex w-[120px] shrink-0 items-center justify-center whitespace-nowrap rounded-[28px] border border-[#d8dad8] bg-white px-[9px] py-[7px] text-sm tracking-[-0.24px] drop-shadow-[0_1px_1px_rgba(50,7,7,0.04)]">
+                <label className="flex w-[120px] shrink-0 items-center justify-center whitespace-nowrap rounded-[28px] border border-[#d8dad8] bg-white px-[9px] py-[7px] text-base tracking-[-0.24px] drop-shadow-[0_1px_1px_rgba(50,7,7,0.04)]">
                   <input
                     type="text"
                     inputMode="numeric"
@@ -263,9 +263,9 @@ export default function EquityCalculator() {
               </div>
               <div className="flex flex-1 items-center justify-between gap-2">
                 <span className="whitespace-nowrap font-heading text-sm font-semibold tracking-[-0.24px] text-[#454745]">
-                  Mortgage balance
+                  Mortgage Balance
                 </span>
-                <label className="flex w-[120px] shrink-0 items-center justify-center whitespace-nowrap rounded-[28px] border border-[#d8dad8] bg-white px-[9px] py-[7px] text-sm tracking-[-0.24px] drop-shadow-[0_1px_1px_rgba(50,7,7,0.04)]">
+                <label className="flex w-[120px] shrink-0 items-center justify-center whitespace-nowrap rounded-[28px] border border-[#d8dad8] bg-white px-[9px] py-[7px] text-base tracking-[-0.24px] drop-shadow-[0_1px_1px_rgba(50,7,7,0.04)]">
                   <input
                     type="text"
                     inputMode="numeric"
@@ -281,7 +281,7 @@ export default function EquityCalculator() {
             </div>
 
             {/* Equity progress bar */}
-            <div className="flex h-4 w-full overflow-hidden rounded">
+            <div className="flex h-4 w-full overflow-hidden rounded-lg">
               <div
                 className="h-full border-r-2 border-white bg-[#f9a8d4]"
                 style={{ width: `${releasedWidthPct}%` }}
@@ -297,15 +297,15 @@ export default function EquityCalculator() {
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1">
                   <span className="size-[9px] shrink-0 rounded-full bg-[#f9a8d4]" />
-                  <span className="font-heading text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">Released</span>
+                  <span className="font-heading text-sm font-medium tracking-[-0.24px] text-[#454745]">Released</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <span className="size-[9px] shrink-0 rounded-full bg-[#fbcfe8]" />
-                  <span className="font-heading text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">Retained equity</span>
+                  <span className="font-heading text-sm font-medium tracking-[-0.24px] text-[#454745]">Retained Equity</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <span className="size-[9px] shrink-0 rounded-full bg-[#e8e9e8]" />
-                  <span className="font-heading text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">Mortgage</span>
+                  <span className="font-heading text-sm font-medium tracking-[-0.24px] text-[#454745]">Mortgage</span>
                 </div>
               </div>
               <div
@@ -318,7 +318,7 @@ export default function EquityCalculator() {
                 }`}
               >
                 <span
-                  className={`whitespace-nowrap font-heading text-xs font-semibold tracking-[-0.24px] ${
+                  className={`whitespace-nowrap font-heading text-sm font-semibold tracking-[-0.24px] ${
                     financingAmount > FINANCING_LIMIT
                       ? "text-[#dc2626]"
                       : financingAmount === FINANCING_LIMIT
@@ -340,7 +340,7 @@ export default function EquityCalculator() {
                 <span className="font-heading text-3xl font-extrabold tracking-[-0.24px] text-[#320707]">
                   {Math.round(equityPercent)}%
                 </span>
-                <span className="font-heading text-xs font-bold uppercase tracking-[0.6px] text-[#320707]">
+                <span className="font-heading text-xs font-bold uppercase tracking-[0.5px] text-[#320707]">
                   Releasing from equity
                 </span>
               </div>
@@ -355,7 +355,7 @@ export default function EquityCalculator() {
                 <span className="font-heading text-3xl font-extrabold tracking-[-0.24px] text-[#320707]">
                   {Math.round(propertyValuePercent)}%
                 </span>
-                <span className="font-heading text-xs font-bold uppercase tracking-[0.6px] text-[#320707]">
+                <span className="font-heading text-xs font-bold uppercase tracking-[0.5px] text-[#320707]">
                   Releasing from valuation
                 </span>
               </div>
@@ -366,13 +366,13 @@ export default function EquityCalculator() {
           <div className="flex w-full flex-col items-start gap-5 rounded-[22px] bg-white p-4 shadow-[0_10px_28px_-18px_rgba(131,13,65,0.18)] sm:p-[22px]">
             <div className="flex items-center gap-2.5">
               <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#FAF0F3]">
-                <span className="font-heading text-sm font-extrabold tracking-[-0.19px] text-dark">2</span>
+                <span className="font-heading text-sm font-extrabold tracking-[-0.24px] text-dark">2</span>
               </div>
-              <p className="font-heading text-base font-bold tracking-[-0.19px] text-dark sm:text-xl">
+              <p className="font-heading text-base font-semibold tracking-[-0.22px] text-dark sm:text-[22px]">
                 How long do you want it for?
               </p>
             </div>
-            <div className="flex w-full items-end justify-center gap-2.5 pt-px">
+            <div className="flex w-full items-end justify-center gap-3 pt-px">
               {([2, 3, 5] as const).map((years) => {
                 const active = term === years;
                 return (
@@ -380,22 +380,20 @@ export default function EquityCalculator() {
                     key={years}
                     type="button"
                     onClick={() => setTerm(years)}
-                    className={`flex flex-1 flex-col items-center justify-center gap-1 rounded-2xl border px-[11px] py-[19px] drop-shadow-[0_1px_1px_rgba(50,7,7,0.04)] ${
-                      active
-                        ? "border-brand bg-[rgba(131,13,65,0.06)] shadow-[0_0_0_3px_rgba(131,13,65,0.08)]"
-                        : "border-[#d8d4cf] bg-white"
+                    className={`flex h-[80px] flex-1 flex-col items-center justify-center gap-1 rounded-2xl border bg-white px-[11px] py-[19px] drop-shadow-[0_1px_1px_rgba(50,7,7,0.04)] ${
+                      active ? "border-brand shadow-[inset_0_0_0_1px_#830d41]" : "border-[#e4e4e4]"
                     }`}
                   >
                     <span
-                      className={`font-heading text-[40px] font-extrabold tracking-[-0.24px] ${
-                        active ? "text-brand" : "text-[#6b6d6b]"
+                      className={`font-heading text-[30px] font-extrabold tracking-[-0.24px] ${
+                        active ? "text-brand" : "text-[#454745]"
                       }`}
                     >
                       {years}
                     </span>
                     <span
-                      className={`font-heading text-xs font-bold uppercase tracking-[0.6px] ${
-                        active ? "text-brand" : "text-[#6b6d6b]"
+                      className={`font-heading text-base font-bold uppercase tracking-[0.5px] ${
+                        active ? "text-brand" : "text-[#454745]"
                       }`}
                     >
                       Years
@@ -410,9 +408,9 @@ export default function EquityCalculator() {
           <div className="flex w-full flex-col items-center gap-6 rounded-[22px] bg-white p-4 shadow-[0_10px_28px_-18px_rgba(131,13,65,0.18)] sm:p-[22px]">
             <div className="flex w-full items-center gap-2.5">
               <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#FAF0F3]">
-                <span className="font-heading text-sm font-extrabold tracking-[-0.19px] text-dark">3</span>
+                <span className="font-heading text-sm font-extrabold tracking-[-0.24px] text-dark">3</span>
               </div>
-              <p className="font-heading text-base font-bold tracking-[-0.19px] text-dark sm:text-xl">Your payments</p>
+              <p className="font-heading text-base font-semibold tracking-[-0.22px] text-dark sm:text-[22px]">Your payments</p>
             </div>
 
             <div className="flex w-full flex-col items-center gap-4">
@@ -427,10 +425,10 @@ export default function EquityCalculator() {
                     paymentMethod === "fixed" ? "bg-brand drop-shadow-[0_1px_1px_rgba(0,0,0,0.05)]" : ""
                   }`}
                 >
-                  <p className={`font-heading text-sm font-semibold tracking-[-0.24px] sm:text-base ${paymentMethod === "fixed" ? "text-white" : "text-dark"}`}>
+                  <p className={`font-heading text-base font-semibold tracking-[-0.24px] ${paymentMethod === "fixed" ? "text-white" : "text-dark"}`}>
                     Fixed Amount
                   </p>
-                  <p className={`font-heading text-xs font-medium ${paymentMethod === "fixed" ? "text-white/80" : "text-[#6b6d6b]"}`}>
+                  <p className={`font-heading text-[13px] font-medium ${paymentMethod === "fixed" ? "text-white/80" : "text-[#6b6d6b]"}`}>
                     Set
                     <br className="sm:hidden" />
                     <span className="hidden sm:inline">{" "}</span>
@@ -444,10 +442,10 @@ export default function EquityCalculator() {
                     paymentMethod === "share" ? "bg-brand drop-shadow-[0_1px_1px_rgba(0,0,0,0.05)]" : ""
                   }`}
                 >
-                  <p className={`font-heading text-sm font-semibold tracking-[-0.24px] sm:text-base ${paymentMethod === "share" ? "text-white" : "text-dark"}`}>
+                  <p className={`font-heading text-base font-semibold tracking-[-0.24px] ${paymentMethod === "share" ? "text-white" : "text-dark"}`}>
                     Share Value
                   </p>
-                  <p className={`font-heading text-xs font-medium ${paymentMethod === "share" ? "text-white/80" : "text-[#6b6d6b]"}`}>
+                  <p className={`font-heading text-[13px] font-medium ${paymentMethod === "share" ? "text-white/80" : "text-[#6b6d6b]"}`}>
                     Changes with your property value
                   </p>
                 </button>
@@ -458,7 +456,7 @@ export default function EquityCalculator() {
               <span className="text-center font-heading text-base font-semibold tracking-[-0.24px] text-[#454745] sm:text-lg">
                 Monthly rent you get from property
               </span>
-              <div className="flex w-full items-center justify-center gap-2 px-0 sm:px-5">
+              <div className="relative flex w-full items-center justify-center px-0 sm:px-5">
                 {isEditingMonthlyRent ? (
                   <input
                     type="text"
@@ -493,7 +491,7 @@ export default function EquityCalculator() {
                   type="button"
                   onClick={startEditingMonthlyRent}
                   aria-label="Edit monthly rent"
-                  className="relative size-[30px] shrink-0 rounded-full bg-[#f5f5f5]"
+                  className="absolute right-0 top-1/2 size-[30px] shrink-0 -translate-y-1/2 rounded-full border border-[#d8dad8] bg-white drop-shadow-[0_1px_1px_rgba(50,7,7,0.04)] sm:right-5"
                 >
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="relative size-[14px]">
@@ -516,7 +514,7 @@ export default function EquityCalculator() {
                     paymentOption === "rent" ? "bg-[#fde2e8]" : "bg-[#f1f5f2]"
                   }`}
                 >
-                  <span className={`whitespace-nowrap font-heading text-sm font-semibold tracking-[-0.24px] ${paymentOption === "rent" ? "text-brand" : "text-dark"}`}>
+                  <span className={`whitespace-nowrap font-heading text-base font-semibold tracking-[-0.24px] ${paymentOption === "rent" ? "text-brand" : "text-dark"}`}>
                     Rent share only
                   </span>
                   {paymentOption === "rent" ? (
@@ -538,7 +536,7 @@ export default function EquityCalculator() {
                     paymentOption === "mixed" ? "bg-[#fde2e8]" : "bg-[#f1f5f2]"
                   }`}
                 >
-                  <span className={`whitespace-nowrap font-heading text-sm font-semibold tracking-[-0.24px] ${paymentOption === "mixed" ? "text-brand" : "text-dark"}`}>
+                  <span className={`whitespace-nowrap font-heading text-base font-semibold tracking-[-0.24px] ${paymentOption === "mixed" ? "text-brand" : "text-dark"}`}>
                     Partial Monthly
                   </span>
                   {paymentOption === "mixed" ? (
@@ -560,7 +558,7 @@ export default function EquityCalculator() {
                     paymentOption === "full" ? "bg-[#fde2e8]" : "bg-[#f1f5f2]"
                   }`}
                 >
-                  <span className={`whitespace-nowrap font-heading text-sm font-semibold tracking-[-0.24px] ${paymentOption === "full" ? "text-brand" : "text-dark"}`}>
+                  <span className={`whitespace-nowrap font-heading text-base font-semibold tracking-[-0.24px] ${paymentOption === "full" ? "text-brand" : "text-dark"}`}>
                     Monthly
                   </span>
                   {paymentOption === "full" ? (
@@ -579,19 +577,19 @@ export default function EquityCalculator() {
             </div>
 
             <div className="flex w-full flex-col items-center">
-              <p className="text-center font-heading text-[28px] font-extrabold leading-[42px] tracking-[-0.24px] text-brand">
+              <p className="text-center font-heading text-[30px] font-extrabold leading-[42px] tracking-[-0.24px] text-[#320707]">
                 {formatMoney(selectedPayment)}
-                <span className="font-heading text-sm font-semibold leading-[21px] text-[#6b6d6b]">/mo</span>
+                <span className="font-heading text-lg font-semibold leading-[21px] text-[#6b6d6b]">/mo</span>
               </p>
 
               {/* Payment slider — driven by the "Choose how much to pay each month" annotation:
                   leftmost = Rent share only, dragged = Mixed partially, rightmost = Full monthly */}
               <div className="flex w-full max-w-[538px] flex-col gap-3">
                 <div className="flex w-full items-center justify-between">
-                  <span className="font-heading text-[13px] font-medium leading-[19.5px] tracking-[-0.24px] text-[#6b6d6b]">
+                  <span className="font-heading text-base font-medium leading-5 tracking-[-0.24px] text-[#454745]">
                     {formatMoney(minPayment)}/mo
                   </span>
-                  <span className="font-heading text-[13px] font-medium leading-[19.5px] tracking-[-0.24px] text-[#6b6d6b]">
+                  <span className="font-heading text-base font-medium leading-5 tracking-[-0.24px] text-[#454745]">
                     {formatMoney(maxPayment)}/mo
                   </span>
                 </div>
@@ -612,11 +610,8 @@ export default function EquityCalculator() {
               </div>
             </div>
 
-            <div className="flex w-full items-center justify-center gap-1.5 rounded-2xl bg-[#e8ffd1] p-4">
-              <div className="relative size-5 shrink-0">
-                <Image src="/equity-calculator/toast-icon.svg" alt="" fill />
-              </div>
-              <p className="text-center font-heading text-sm font-semibold tracking-[-0.24px] text-[#1f8a5b]">
+            <div className="flex h-16 w-full items-center justify-center rounded-2xl bg-[#e8ffd1] p-4">
+              <p className="text-center font-heading text-lg font-bold leading-[21px] tracking-[0.18px] text-[#1f8d58]">
                 {paymentOption === "rent"
                   ? "You have chosen to fully defer the financing cost."
                   : savingsOverall > 0
@@ -625,32 +620,31 @@ export default function EquityCalculator() {
               </p>
             </div>
 
-            {/* Monthly payments summary */}
-            <div className="flex w-full flex-col items-start gap-5 rounded-2xl bg-[#f8f0e7] p-5">
-              <p className="font-heading text-xl font-semibold tracking-[-0.24px] text-dark">Monthly Payments</p>
+            {/* Payment summary */}
+            <div className="flex w-full flex-col items-start gap-4 rounded-2xl bg-[#fbf5ef] p-5">
+              {/* Monthly payments */}
+              <p className="font-heading text-xl font-semibold tracking-[-0.24px] text-[#320707]">Monthly Payments</p>
 
               <div className="flex w-full items-end justify-between">
                 <div className="flex flex-col items-start gap-1">
-                  <span className="font-heading text-sm font-medium tracking-[-0.24px] text-[#320707]">Pauzible&apos;s share</span>
-                  <span className="font-heading text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">
+                  <span className="font-heading text-base font-medium tracking-[-0.24px] text-dark">Pauzible&apos;s share</span>
+                  <span className="font-heading text-sm font-medium tracking-[-0.24px] text-[#6b6d6b]">
                     of your {formatMoney(monthlyRent)} monthly rent
                   </span>
                 </div>
-                <span className="font-heading text-lg font-bold tracking-[-0.24px] text-dark">
+                <span className="font-heading text-lg font-semibold tracking-[-0.24px] text-dark">
                   {formatMoney(minPayment)}/mo
                 </span>
               </div>
 
-              <div className="h-px w-full bg-[#d9d9d9]" />
-
               <div className="flex w-full items-end justify-between">
                 <div className="flex flex-col items-start gap-0.5">
-                  <span className="font-heading text-sm font-medium tracking-[-0.24px] text-[#320707]">Interest cost</span>
-                  <span className="font-heading text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">
-                    <span className="font-semibold text-brand">{(effectiveMonthlyRate * 100).toFixed(2)}%</span> per month
+                  <span className="font-heading text-base font-medium tracking-[-0.24px] text-dark">Interest cost</span>
+                  <span className="font-heading text-sm font-medium tracking-[-0.24px] text-[#6b6d6b]">
+                    <span className="font-bold text-brand">{(effectiveMonthlyRate * 100).toFixed(2)}%</span> per month
                   </span>
                 </div>
-                <span className="font-heading text-lg font-bold tracking-[-0.24px] text-dark">
+                <span className="font-heading text-lg font-semibold tracking-[-0.24px] text-dark">
                   {formatMoney(interestCostPerMonth)}/mo
                 </span>
               </div>
@@ -658,103 +652,104 @@ export default function EquityCalculator() {
               <div className="h-px w-full bg-[#d9d9d9]" />
 
               <div className="flex w-full items-center justify-between">
-                <span className="font-heading text-sm font-semibold tracking-[-0.24px] text-[#320707]">Total Monthly Payment</span>
+                <span className="font-heading text-lg font-medium tracking-[-0.24px] text-dark">Total monthly payment</span>
                 <span className="font-heading text-2xl font-bold tracking-[-0.24px] text-brand">
                   {formatMoney(totalMonthlyPayment)}/mo
-                </span>
-              </div>
-            </div>
-
-            {/* Final repayment summary */}
-            <div className="flex w-full flex-col items-start gap-5 rounded-2xl bg-[#f8f0e7] p-5">
-              <p className="font-heading text-xl font-semibold tracking-[-0.24px] text-dark">Final Repayment</p>
-
-              <div className="flex w-full items-center justify-between">
-                <span className="font-heading text-sm font-medium tracking-[-0.24px] text-[#320707]">
-                  Principal (Released amount)
-                </span>
-                <span className="font-heading text-[17px] font-bold tracking-[-0.24px] text-[#320707]">
-                  {formatK(financingAmount)}
-                </span>
-              </div>
-
-              <div className="flex w-full items-center justify-between">
-                <span className="font-heading text-sm font-medium tracking-[-0.24px] text-[#320707]">
-                  Unpaid interest (Interest cost)
-                </span>
-                <span className="font-heading text-[17px] font-bold tracking-[-0.24px] text-[#320707]">
-                  {formatK(unpaidInterest)}
                 </span>
               </div>
 
               <div className="h-px w-full bg-[#d9d9d9]" />
 
+              {/* Final repayment */}
+              <p className="font-heading text-xl font-semibold tracking-[-0.24px] text-[#320707]">Final Repayment</p>
+
+              <div className="flex w-full items-center justify-between">
+                <span className="font-heading text-base font-medium tracking-[-0.24px] text-dark">
+                  Principal (Released amount)
+                </span>
+                <span className="font-heading text-lg font-semibold tracking-[-0.24px] text-dark">
+                  {formatK(financingAmount)}
+                </span>
+              </div>
+
+              <div className="flex w-full items-center justify-between">
+                <span className="font-heading text-base font-medium tracking-[-0.24px] text-dark">
+                  Unpaid interest (Interest cost)
+                </span>
+                <span className="font-heading text-lg font-semibold tracking-[-0.24px] text-dark">
+                  {formatK(unpaidInterest)}
+                </span>
+              </div>
+
               {paymentMethod === "share" && (
-                <div className="flex w-full flex-col items-start gap-4">
-                  <p className="text-sm leading-[20px] tracking-[-0.24px] text-[#6b6d6b]">
-                    You have chosen <strong className="font-bold text-[#320707]">Property value-linked</strong> so the
-                    final amount moves with your property&apos;s value.
-                  </p>
+                <>
+                  <div className="h-px w-full bg-[#d9d9d9]" />
+                  <div className="flex w-full flex-col items-start gap-4">
+                    <p className="text-sm leading-[20px] tracking-[-0.24px] text-[#6b6d6b]">
+                      You have chosen <strong className="font-bold text-[#320707]">Property value-linked</strong> so the
+                      final amount moves with your property&apos;s value.
+                    </p>
 
-                  <div className="flex w-full items-center justify-between">
-                    <span className="font-heading text-sm font-medium tracking-[-0.24px] text-[#320707]">Adjustment amount</span>
-                    <span className="font-heading text-[17px] font-bold tracking-[-0.24px] text-[#320707]">
-                      {formatSignedK(adjustmentAmount)}
-                    </span>
-                  </div>
+                    <div className="flex w-full items-center justify-between">
+                      <span className="font-heading text-base font-medium tracking-[-0.24px] text-dark">Adjustment amount</span>
+                      <span className="font-heading text-lg font-semibold tracking-[-0.24px] text-dark">
+                        {formatSignedK(adjustmentAmount)}
+                      </span>
+                    </div>
 
-                  <div className="flex w-full flex-col gap-3">
-                    <div className="relative flex h-1 w-full items-center">
-                      <div
-                        className="pointer-events-none relative h-1 w-full overflow-hidden rounded-full"
-                        style={{ backgroundImage: "linear-gradient(to right, #9bd878, #f4e9de, #f9c579)" }}
-                      />
-                      <span className="pointer-events-none absolute left-[1.5%] top-1/2 size-[7px] -translate-y-1/2 rounded-full bg-[#9bd878]" />
-                      <span className="pointer-events-none absolute right-[1.5%] top-1/2 size-[7px] -translate-y-1/2 rounded-full bg-[#f9c579]" />
-                      <input
-                        type="range"
-                        min={-ADJUSTMENT_RANGE_PERCENT}
-                        max={ADJUSTMENT_RANGE_PERCENT}
-                        step={ADJUSTMENT_RANGE_PERCENT}
-                        value={adjustmentPercent}
-                        onChange={(e) => setAdjustmentPercent(Number(e.target.value))}
-                        className="range-thumb absolute inset-0 h-1 w-full cursor-pointer appearance-none bg-transparent"
-                        aria-label="Property value adjustment"
-                      />
-                    </div>
-                    <div className="flex w-full items-start justify-between">
-                      <div className="flex flex-col items-start gap-0.5">
-                        <span className="whitespace-nowrap font-heading text-xs font-semibold tracking-[-0.24px] text-[#4a7a1e]">
-                          Falls: {formatSignedK(fallsAdjustmentAmount)}
-                        </span>
-                        <span className="whitespace-nowrap font-heading text-xs tracking-[-0.24px] text-[#6b6d6b]">
-                          ({ADJUSTMENT_RANGE_PERCENT}% lower)
-                        </span>
+                    <div className="flex w-full flex-col gap-3">
+                      <div className="relative flex h-1 w-full items-center">
+                        <div
+                          className="pointer-events-none relative h-1 w-full overflow-hidden rounded-full"
+                          style={{ backgroundImage: "linear-gradient(to right, #9bd878, #f4e9de, #f9c579)" }}
+                        />
+                        <span className="pointer-events-none absolute left-[1.5%] top-1/2 size-[7px] -translate-y-1/2 rounded-full bg-[#9bd878]" />
+                        <span className="pointer-events-none absolute right-[1.5%] top-1/2 size-[7px] -translate-y-1/2 rounded-full bg-[#f9c579]" />
+                        <input
+                          type="range"
+                          min={-ADJUSTMENT_RANGE_PERCENT}
+                          max={ADJUSTMENT_RANGE_PERCENT}
+                          step={ADJUSTMENT_RANGE_PERCENT}
+                          value={adjustmentPercent}
+                          onChange={(e) => setAdjustmentPercent(Number(e.target.value))}
+                          className="range-thumb absolute inset-0 h-1 w-full cursor-pointer appearance-none bg-transparent"
+                          aria-label="Property value adjustment"
+                        />
                       </div>
-                      <div className="flex flex-col items-center gap-0.5">
-                        <span className="whitespace-nowrap font-heading text-xs font-semibold tracking-[-0.24px] text-dark">
-                          Unchanged: £0
-                        </span>
-                        <span className="whitespace-nowrap font-heading text-xs tracking-[-0.24px] text-[#6b6d6b]">(as today)</span>
-                      </div>
-                      <div className="flex flex-col items-end gap-0.5">
-                        <span className="whitespace-nowrap font-heading text-xs font-semibold tracking-[-0.24px] text-[#d48400]">
-                          Rises: {formatSignedK(risesAdjustmentAmount)}
-                        </span>
-                        <span className="whitespace-nowrap font-heading text-xs tracking-[-0.24px] text-[#6b6d6b]">
-                          ({ADJUSTMENT_RANGE_PERCENT}% higher)
-                        </span>
+                      <div className="flex w-full items-start justify-between">
+                        <div className="flex flex-col items-start gap-0.5">
+                          <span className="whitespace-nowrap font-heading text-xs font-semibold tracking-[-0.24px] text-[#4a7a1e]">
+                            Falls: {formatSignedK(fallsAdjustmentAmount)}
+                          </span>
+                          <span className="whitespace-nowrap font-heading text-xs tracking-[-0.24px] text-[#6b6d6b]">
+                            ({ADJUSTMENT_RANGE_PERCENT}% lower)
+                          </span>
+                        </div>
+                        <div className="flex flex-col items-center gap-0.5">
+                          <span className="whitespace-nowrap font-heading text-xs font-semibold tracking-[-0.24px] text-dark">
+                            Unchanged: £0
+                          </span>
+                          <span className="whitespace-nowrap font-heading text-xs tracking-[-0.24px] text-[#6b6d6b]">(as today)</span>
+                        </div>
+                        <div className="flex flex-col items-end gap-0.5">
+                          <span className="whitespace-nowrap font-heading text-xs font-semibold tracking-[-0.24px] text-[#d48400]">
+                            Rises: {formatSignedK(risesAdjustmentAmount)}
+                          </span>
+                          <span className="whitespace-nowrap font-heading text-xs tracking-[-0.24px] text-[#6b6d6b]">
+                            ({ADJUSTMENT_RANGE_PERCENT}% higher)
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </>
               )}
 
-              <div className="flex w-full items-center justify-between rounded-2xl bg-[#320707] px-[18px] py-4">
+              <div className="flex w-full items-center justify-between rounded-2xl bg-[#320707] px-5 py-4">
                 <span className="font-heading text-base font-medium tracking-[-0.24px] text-white">
                   Paid at the end of the term
                 </span>
-                <span className="font-heading text-2xl font-extrabold leading-[39px] tracking-[-0.24px] text-[#d6f39f]">
+                <span className="font-heading text-[26px] font-extrabold leading-[39px] tracking-[-0.24px] text-[#d6f39f]">
                   {formatK(displayedFinalRepayment)}
                 </span>
               </div>
@@ -769,11 +764,11 @@ export default function EquityCalculator() {
             onClick={openUnlockEquityDialog}
             className="flex h-14 w-full items-center justify-center rounded-full bg-brand"
           >
-            <span className="font-heading text-lg font-semibold leading-[26px] tracking-[-0.24px] text-brand-btn-text">
+            <span className="font-heading text-xl font-semibold leading-[26px] tracking-[-0.24px] text-brand-btn-text">
               Get started
             </span>
           </button>
-          <p className="text-center font-heading text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">
+          <p className="text-center font-heading text-xs font-normal tracking-[-0.24px] text-[#6b6d6b]">
             Illustrative example. Not a quote or offer.
           </p>
         </div>

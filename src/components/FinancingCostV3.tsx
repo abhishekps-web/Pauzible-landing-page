@@ -21,24 +21,29 @@ function interestTabFromPercent(percent: number): InterestTab {
   return "partial";
 }
 
+// baseAdjustment is the fully-deferred interest adjustment (i.e. Rent share only, 0% paid monthly).
+// It scales down toward £0 as more of the interest is paid monthly (see adjustmentAmount below).
 const REPAYMENT_DATA: Record<
   RepaymentTab,
-  { principal: string; adjustment: string; settlement: string; take?: { label: string; value: string; kind: "gain" | "lose" } }
+  { principal: number; baseAdjustment: number; take?: { label: string; value: string; kind: "gain" | "lose" } }
 > = {
   downside: {
-    principal: "£100K",
-    adjustment: "£27K",
-    settlement: "£127K",
+    principal: 100000,
+    baseAdjustment: 27000,
     take: { label: "Takes Lose", value: "- £50K", kind: "lose" },
   },
-  base: { principal: "£100K", adjustment: "£41K", settlement: "£141K" },
+  base: { principal: 100000, baseAdjustment: 41000 },
   upside: {
-    principal: "£100K",
-    adjustment: "£55K",
-    settlement: "£155K",
+    principal: 100000,
+    baseAdjustment: 55000,
     take: { label: "Takes Gain", value: "+ £50K", kind: "gain" },
   },
 };
+
+function formatMoneyK(amount: number) {
+  const rounded = Math.round(amount);
+  return rounded >= 1000 ? `£${Math.round(rounded / 1000)}K` : `£${rounded}`;
+}
 
 function TabSwitcher<T extends string>({
   tabs,
@@ -195,7 +200,16 @@ export default function FinancingCostV3() {
     interestCost: `£${interestCostAmount}`,
     payment: `£${RENT_SHARE + interestCostAmount}`,
   };
-  const repayment = REPAYMENT_DATA[repaymentTab];
+  const repaymentBase = REPAYMENT_DATA[repaymentTab];
+  const paidMonthlyFraction = interestPercent / 100;
+  const adjustmentAmount = repaymentBase.baseAdjustment * (1 - paidMonthlyFraction);
+  const settlementAmount = repaymentBase.principal + adjustmentAmount;
+  const repayment = {
+    principal: formatMoneyK(repaymentBase.principal),
+    adjustment: formatMoneyK(adjustmentAmount),
+    settlement: formatMoneyK(settlementAmount),
+    take: repaymentBase.take,
+  };
 
   function selectInterestTab(tab: InterestTab) {
     if (tab === "rent") setInterestPercent(0);
@@ -253,22 +267,24 @@ export default function FinancingCostV3() {
           ]}
           illustration={
             <div className="flex w-full flex-col items-center justify-center gap-2.5">
-              {interestTab === "partial" && (
-                <div className="relative flex h-1 w-full max-w-[266px] items-center">
-                  <div className="relative h-1 w-full overflow-hidden rounded-full bg-[#f4dce3]">
-                    <div className="absolute inset-y-0 left-0 bg-brand" style={{ width: `${interestPercent}%` }} />
-                  </div>
-                  <input
-                    type="range"
-                    min={0}
-                    max={100}
-                    value={interestPercent}
-                    onChange={(e) => setInterestPercent(Number(e.target.value))}
-                    className="range-thumb absolute inset-0 h-1 w-full cursor-pointer appearance-none bg-transparent"
-                    aria-label="Interest cost payment amount"
-                  />
+              <div
+                className={`relative flex h-1 w-full max-w-[266px] items-center ${interestTab === "partial" ? "" : "invisible"}`}
+                aria-hidden={interestTab !== "partial"}
+              >
+                <div className="relative h-1 w-full overflow-hidden rounded-full bg-[#f4dce3]">
+                  <div className="absolute inset-y-0 left-0 bg-brand" style={{ width: `${interestPercent}%` }} />
                 </div>
-              )}
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={interestPercent}
+                  onChange={(e) => setInterestPercent(Number(e.target.value))}
+                  tabIndex={interestTab === "partial" ? 0 : -1}
+                  className="range-thumb absolute inset-0 h-1 w-full cursor-pointer appearance-none bg-transparent"
+                  aria-label="Interest cost payment amount"
+                />
+              </div>
               <div className="flex items-center justify-center py-3 drop-shadow-[0px_12px_50px_rgba(131,13,65,0.12)]">
                 <StatCircle value={interest.rentShare} label="Rent Share" background={PINK_CREAM_GRADIENT} />
                 <OperatorBadge symbol="+" />
@@ -287,6 +303,9 @@ export default function FinancingCostV3() {
                 />
                 <OperatorBadge symbol="=" />
                 <StatCircle value={interest.payment} suffix="/m" label="Payment" background={MULTI_STOP_GRADIENT} />
+              </div>
+              <div className="invisible" aria-hidden>
+                <TakeBadge label="Takes Lose" value="- £50K" kind="lose" />
               </div>
             </div>
           }
@@ -313,6 +332,9 @@ export default function FinancingCostV3() {
           ]}
           illustration={
             <div className="flex w-full flex-col items-center justify-center gap-2.5">
+              <div className="invisible relative flex h-1 w-full max-w-[266px] items-center" aria-hidden>
+                <div className="relative h-1 w-full overflow-hidden rounded-full bg-[#f4dce3]" />
+              </div>
               <div className="flex items-center justify-center px-1 py-3 drop-shadow-[0px_12px_50px_rgba(131,13,65,0.12)]">
                 <StatCircle value={repayment.principal} label="Principal" background={PINK_CREAM_GRADIENT} />
                 <OperatorBadge symbol="+" />
@@ -332,9 +354,13 @@ export default function FinancingCostV3() {
                 <OperatorBadge symbol="=" />
                 <StatCircle value={repayment.settlement} label="Settlement" background="#fff5f7" />
               </div>
-              {repayment.take && (
-                <TakeBadge label={repayment.take.label} value={repayment.take.value} kind={repayment.take.kind} />
-              )}
+              <div className={repayment.take ? "" : "invisible"} aria-hidden={!repayment.take}>
+                <TakeBadge
+                  label={repayment.take?.label ?? "Takes Lose"}
+                  value={repayment.take?.value ?? "- £50K"}
+                  kind={repayment.take?.kind ?? "lose"}
+                />
+              </div>
             </div>
           }
           description={
