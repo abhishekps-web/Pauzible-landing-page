@@ -16,8 +16,8 @@ export default function Home() {
       <ValueProposition />
       <GrowYourWealth />
       <FinancingCostV3 />
-      <EquityCalculator />
       <CaseStudies />
+      <EquityCalculator />
       <FAQ />
       <Footer />
     </>

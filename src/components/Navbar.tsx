@@ -72,7 +72,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full bg-white px-5 pb-6 pt-4 transition-transform duration-300 ease-in-out sm:px-8 md:px-20 lg:pb-12 lg:pt-12 ${
+      className={`sticky top-0 z-50 w-full px-5 pb-6 pt-4 transition-transform duration-300 ease-in-out sm:px-8 md:px-20 lg:pb-12 lg:pt-12 ${
         isHidden ? "-translate-y-full" : "translate-y-0"
       }`}
     >

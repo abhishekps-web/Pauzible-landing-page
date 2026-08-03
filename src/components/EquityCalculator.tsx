@@ -154,7 +154,7 @@ export default function EquityCalculator() {
           {/* Step 1 — Financing amount */}
           <div className="relative grid w-full gap-y-5 rounded-[22px] bg-white p-4 drop-shadow-[0_10px_14px_rgba(131,13,65,0.18)] sm:p-[22px]">
             <div className="flex items-center gap-2.5">
-              <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#d6f39f]">
+              <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#FAF0F3]">
                 <span className="font-heading text-sm font-extrabold tracking-[-0.19px] text-dark">1</span>
               </div>
               <p className="font-heading text-base font-bold tracking-[-0.19px] text-dark sm:text-xl">
@@ -365,7 +365,7 @@ export default function EquityCalculator() {
           {/* Step 2 — Term */}
           <div className="flex w-full flex-col items-start gap-5 rounded-[22px] bg-white p-4 shadow-[0_10px_28px_-18px_rgba(131,13,65,0.18)] sm:p-[22px]">
             <div className="flex items-center gap-2.5">
-              <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#d6f39f]">
+              <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#FAF0F3]">
                 <span className="font-heading text-sm font-extrabold tracking-[-0.19px] text-dark">2</span>
               </div>
               <p className="font-heading text-base font-bold tracking-[-0.19px] text-dark sm:text-xl">
@@ -409,7 +409,7 @@ export default function EquityCalculator() {
           {/* Step 3 — Payments */}
           <div className="flex w-full flex-col items-center gap-6 rounded-[22px] bg-white p-4 shadow-[0_10px_28px_-18px_rgba(131,13,65,0.18)] sm:p-[22px]">
             <div className="flex w-full items-center gap-2.5">
-              <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#d6f39f]">
+              <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#FAF0F3]">
                 <span className="font-heading text-sm font-extrabold tracking-[-0.19px] text-dark">3</span>
               </div>
               <p className="font-heading text-base font-bold tracking-[-0.19px] text-dark sm:text-xl">Your payments</p>

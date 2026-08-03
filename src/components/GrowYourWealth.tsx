@@ -162,14 +162,14 @@ export default function GrowYourWealth() {
           Grow your wealth with Pauzible
         </p>
 
-        <div className="flex w-full max-w-[465px] shrink-0 flex-col items-start gap-2 rounded-3xl border-2 border-white bg-gradient-to-b from-[rgba(254,219,236,0.7)] to-[rgba(254,202,227,0.7)] px-6 py-8 shadow-[0px_8px_12px_0px_rgba(56,56,56,0.1)] sm:px-9 sm:py-10">
-          <p className="w-full font-fira text-base font-bold uppercase tracking-[0.8px] text-dark">
-            You release upto
+        <div className="flex w-full max-w-[465px] shrink-0 flex-col items-start gap-2 rounded-3xl bg-[#FAF0F3] px-6 py-8 sm:px-9 sm:py-10">
+          <p className="w-full font-heading text-base font-bold uppercase tracking-[0.8px] text-dark">
+            Release upto
           </p>
-          <p className="w-full font-fira text-4xl font-extrabold leading-tight tracking-tight text-brand sm:text-[56px] sm:leading-[60px] sm:tracking-[-1px]">
+          <p className="w-full font-heading text-4xl font-extrabold leading-tight tracking-tight text-brand sm:text-[56px] sm:leading-[60px] sm:tracking-[-1px]">
             £500,000
           </p>
-          <p className="w-full font-fira text-base font-medium text-[#6b6d6b]">
+          <p className="w-full font-heading text-base font-medium text-[#6b6d6b]">
             Per property in cash
           </p>
         </div>
