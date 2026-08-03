@@ -2,7 +2,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import ValueProposition from "@/components/ValueProposition";
 import GrowYourWealth from "@/components/GrowYourWealth";
-import FinancingCostV2 from "@/components/FinancingCostV2";
+import FinancingCostV3 from "@/components/FinancingCostV3";
 import EquityCalculator from "@/components/EquityCalculator";
 import CaseStudies from "@/components/CaseStudies";
 import FAQ from "@/components/FAQ";
@@ -15,7 +15,7 @@ export default function Home() {
       <Hero />
       <ValueProposition />
       <GrowYourWealth />
-      <FinancingCostV2 />
+      <FinancingCostV3 />
       <EquityCalculator />
       <CaseStudies />
       <FAQ />

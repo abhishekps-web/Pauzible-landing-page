@@ -10,16 +10,14 @@ function ValueCard({
   description: string;
 }) {
   return (
-    <div className="flex w-full shrink-0 flex-col overflow-hidden rounded-3xl border border-[#e9ced6] sm:w-[413px]">
-      <div className="flex h-[220px] w-full shrink-0 items-start gap-6 overflow-hidden bg-[#fff6f9] p-4 sm:h-[286px] sm:p-6">
-        <div className="relative h-[188px] w-full shrink-0 overflow-hidden rounded-2xl sm:h-[261.5px] sm:w-[364px]">
-          <Image src={illustration} alt="" fill className="object-cover" />
-        </div>
+    <div className="flex w-full shrink-0 flex-col overflow-hidden rounded-3xl border border-[#e8e9e8] sm:w-[413px]">
+      <div className="relative h-[198px] w-full shrink-0 sm:h-[286px]">
+        <Image src={illustration} alt="" fill className="object-cover" />
       </div>
 
-      <div className="flex min-h-[140px] w-full shrink-0 flex-col items-start justify-center gap-2 overflow-hidden bg-white p-5 sm:h-[165px] sm:p-6">
+      <div className="flex min-h-[140px] w-full shrink-0 flex-col items-start justify-center gap-2 overflow-hidden border-t border-[#f9f3f5] bg-white p-5 sm:h-[165px] sm:p-6">
         <p className="font-heading text-xl font-bold leading-7 text-dark">{title}</p>
-        <p className="text-base font-medium leading-6 text-[#212d38]">{description}</p>
+        <p className="text-base font-medium leading-6 text-[#6b6d6b]">{description}</p>
       </div>
     </div>
   );

@@ -70,7 +70,7 @@ const INTEREST_ASSETS: Record<InterestTab, { src: string; alt: string }> = {
     alt: "Diagram showing £400 Pauzible rent share plus £400 interest cost equals £800 monthly payment",
   },
   rent: {
-    src: "/interest-cost-chart-rent -2.png",
+    src: "/financing-cost/interest-cost-chart-rent.png",
     alt: "Diagram showing rent share only, with interest cost deferred to the end of term",
   },
 };
@@ -82,36 +82,42 @@ const REPAYMENT_ASSETS: Record<RepaymentTab, { src: string; alt: string }> = {
   },
   base: {
     src: "/financing-cost/repayment-chart.png",
-    alt: "Diagram showing £100K principal plus £41K interest and adjustment equals £141K final repayment",
+    alt: "Diagram showing £100K principal plus £0 interest adjustment equals £100K settlement",
   },
   upside: {
-    src: "/repayment-chart-upside.png",
+    src: "/financing-cost/repayment-chart-upside.png",
     alt: "Diagram showing final repayment increased by a 10% property value upside adjustment",
   },
 };
 
 type CardShellProps<T extends string> = {
-  children: React.ReactNode;
+  illustration: React.ReactNode;
+  description: React.ReactNode;
 } & (
   | { variant: "tabbed"; tabs: { value: T; label: string }[]; active: T; onChange: (value: T) => void; tabClassName?: string }
   | { variant: "plain" }
 );
 
 function CardShell<T extends string>(props: CardShellProps<T>) {
-  const { children } = props;
+  const { illustration, description } = props;
   return (
-    <div className="relative flex h-auto min-h-[420px] w-full flex-col items-center justify-between gap-6 overflow-hidden rounded-3xl border border-[#e4e4e4] p-6 sm:h-[520px]">
-      <Image
-        src="/financing-cost/card-bg-texture.png"
-        alt=""
-        fill
-        sizes="(min-width: 1024px) 420px, 100vw"
-        className="pointer-events-none rounded-3xl object-cover opacity-25"
-      />
-      {props.variant === "tabbed" && (
-        <TabSwitcher active={props.active} onChange={props.onChange} tabs={props.tabs} className={props.tabClassName} />
-      )}
-      {children}
+    <div className="flex w-full flex-col overflow-hidden rounded-3xl border border-[#e4e4e4]">
+      <div className="relative flex h-auto w-full flex-col items-center gap-6 p-6 sm:h-[386px]">
+        <Image
+          src="/financing-cost/card-bg-texture.png"
+          alt=""
+          fill
+          sizes="(min-width: 1024px) 420px, 100vw"
+          className="pointer-events-none rounded-t-3xl object-cover opacity-25"
+        />
+        {props.variant === "tabbed" && (
+          <TabSwitcher active={props.active} onChange={props.onChange} tabs={props.tabs} className={props.tabClassName} />
+        )}
+        <div className="relative flex w-full flex-1 items-center justify-center">{illustration}</div>
+      </div>
+      <div className="relative flex min-h-[140px] w-full flex-col items-start justify-center gap-2 border-t border-[#f9f3f5] bg-white p-5 tracking-[-0.24px] sm:h-[165px] sm:p-6">
+        {description}
+      </div>
     </div>
   );
 }
@@ -134,24 +140,29 @@ export default function FinancingCostV2() {
 
       <div className="grid w-full grid-cols-1 items-stretch gap-5 lg:grid-cols-3">
         {/* Rent Share Card */}
-        <CardShell variant="plain">
-          <div className="relative mx-auto h-[270px] w-[220px] shrink-0 sm:h-[296px] sm:w-[241px]">
-            <Image
-              src="/financing-cost/rent-share-illustration.png"
-              alt="Diagram showing £2,000 rent split into your £1,600 share and Pauzible's £400 share"
-              fill
-              sizes="(min-width: 640px) 274px, 200px"
-              className="object-cover"
-            />
-          </div>
-          <div className="relative flex w-full flex-col items-start gap-2 tracking-[-0.24px]">
-            <p className="font-heading text-xl font-bold text-dark">
-              Rent Share <span className="font-heading text-base font-semibold text-[#6b6d6b]">(Monthly)</span>
-            </p>
-            <p className="text-base font-medium leading-6 text-[#6b6d6b] sm:h-[72px]">
-              In return for unlocking your equity, Pauzible receives a small share of your rent.</p>
-          </div>
-        </CardShell>
+        <CardShell
+          variant="plain"
+          illustration={
+            <div className="relative mx-auto h-[258px] w-[240px] shrink-0 sm:h-[338px] sm:w-[313px]">
+              <Image
+                src="/financing-cost/rent-share-illustration.png"
+                alt="Diagram showing £2,000 rent split into your £1,600 share and Pauzible's £400 share"
+                fill
+                className="object-contain"
+              />
+            </div>
+          }
+          description={
+            <>
+              <p className="font-heading text-xl font-bold text-dark">
+                Rent Share <span className="font-heading text-base font-semibold text-[#6b6d6b]">(Monthly)</span>
+              </p>
+              <p className="text-base font-medium leading-6 text-[#6b6d6b] sm:h-[72px]">
+                In return for unlocking your equity, Pauzible receives a small share of your rent.
+              </p>
+            </>
+          }
+        />
 
         {/* Interest Cost Card */}
         <CardShell
@@ -159,28 +170,31 @@ export default function FinancingCostV2() {
           active={interestTab}
           onChange={setInterestTab}
           tabs={[
-            { value: "full", label: "Full monthly" },
-            { value: "partial", label: "Partial" },
             { value: "rent", label: "Rent share only" },
+            { value: "partial", label: "Partial monthly" },
+            { value: "full", label: "Monthly" },
           ]}
-        >
-          <div className="relative h-[190px] w-full shrink-0">
-            <Image
-              key={INTEREST_ASSETS[interestTab].src}
-              src={INTEREST_ASSETS[interestTab].src}
-              alt={INTEREST_ASSETS[interestTab].alt}
-              fill
-              sizes="(min-width: 1024px) 400px, 90vw"
-              className="scale-[1.03] object-contain"
-            />
-          </div>
-          <div className="relative flex w-full flex-col items-start gap-2 tracking-[-0.24px]">
-            <p className="font-heading text-xl font-bold text-dark">Interest Cost</p>
-            <p className="text-base font-medium leading-6 text-[#6b6d6b] sm:h-[72px]">
-              Choose to pay financing costs monthly or at the end of the financing term with monthly compounding.
-            </p>
-          </div>
-        </CardShell>
+          illustration={
+            <div className="relative h-[190px] w-full shrink-0">
+              <Image
+                key={INTEREST_ASSETS[interestTab].src}
+                src={INTEREST_ASSETS[interestTab].src}
+                alt={INTEREST_ASSETS[interestTab].alt}
+                fill
+                sizes="(min-width: 1024px) 400px, 90vw"
+                className="scale-[1.03] object-contain"
+              />
+            </div>
+          }
+          description={
+            <>
+              <p className="font-heading text-xl font-bold text-dark">Interest Cost</p>
+              <p className="text-base font-medium leading-6 text-[#6b6d6b] sm:h-[72px]">
+                Choose to pay financing costs monthly or at the end of the financing term with monthly compounding.
+              </p>
+            </>
+          }
+        />
 
         {/* Final Repayment Card */}
         <CardShell
@@ -193,30 +207,33 @@ export default function FinancingCostV2() {
             { value: "base", label: "Base" },
             { value: "upside", label: "Upside +10%" },
           ]}
-        >
-          <div className={`relative w-full shrink-0 ${repaymentTab === "base" ? "h-[157px]" : "h-[195px]"}`}>
-            <Image
-              key={REPAYMENT_ASSETS[repaymentTab].src}
-              src={REPAYMENT_ASSETS[repaymentTab].src}
-              alt={REPAYMENT_ASSETS[repaymentTab].alt}
-              fill
-              sizes="(min-width: 1024px) 400px, 90vw"
-              className={`object-contain ${repaymentTab === "base" ? "scale-[1.053]" : "scale-[1.125]"}`}
-            />
-          </div>
-          <div className="relative flex w-full flex-col items-start gap-2 tracking-[-0.24px]">
-            <p className="font-heading text-xl font-bold text-dark">
-              Final Repayment{" "}
-              <span className="font-heading text-base font-semibold text-[#6b6d6b]">
-                (Property Value-Linked) 
-              </span>
-            </p>
-            <p className="text-base font-medium leading-6 text-[#6b6d6b] sm:h-[72px]">
-              At the end of the financing term, repayment reflects your property&apos;s market value.
-              Pauzible shares in both upside and downside.
-            </p>
-          </div>
-        </CardShell>
+          illustration={
+            <div className={`relative w-full shrink-0 ${repaymentTab === "base" ? "h-[157px]" : "h-[190px]"}`}>
+              <Image
+                key={REPAYMENT_ASSETS[repaymentTab].src}
+                src={REPAYMENT_ASSETS[repaymentTab].src}
+                alt={REPAYMENT_ASSETS[repaymentTab].alt}
+                fill
+                sizes="(min-width: 1024px) 400px, 90vw"
+                className={`object-contain ${repaymentTab === "base" ? "scale-[1.053]" : ""}`}
+              />
+            </div>
+          }
+          description={
+            <>
+              <p className="font-heading text-xl font-bold text-dark">
+                Final Repayment{" "}
+                <span className="font-heading text-base font-semibold text-[#6b6d6b]">
+                  (Property Value-Linked)
+                </span>
+              </p>
+              <p className="text-base font-medium leading-6 text-[#6b6d6b] sm:h-[72px]">
+                At the end of the financing term, repayment reflects your property&apos;s market value.
+                Pauzible shares in both upside and downside.
+              </p>
+            </>
+          }
+        />
       </div>
     </section>
   );

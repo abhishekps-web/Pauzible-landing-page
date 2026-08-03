@@ -13,11 +13,11 @@ type CaseStudy = {
 
 function CardBody({ caseStudy }: { caseStudy: CaseStudy }) {
   return (
-    <div className="flex flex-col gap-3 py-5 md:px-[22px]">
+    <div className="flex flex-col gap-3">
       <p className="font-heading text-xl font-bold leading-8 tracking-[-1px] text-dark md:text-2xl">
         {caseStudy.heading}
       </p>
-      <p className="text-base leading-6 tracking-[-0.16px] text-dark">{caseStudy.body}</p>
+      <p className="text-base font-medium leading-6 tracking-[-0.16px] text-dark">{caseStudy.body}</p>
     </div>
   );
 }
@@ -25,7 +25,7 @@ function CardBody({ caseStudy }: { caseStudy: CaseStudy }) {
 function CaseStudyCard({ caseStudy }: { caseStudy: CaseStudy }) {
   return (
     <>
-      <div className="relative h-[280px] w-full shrink-0 md:h-[457px] md:w-[609px]">
+      <div className="relative h-[280px] w-full shrink-0 md:h-[393px] md:w-[523px]">
         <Image src={caseStudy.image} alt={caseStudy.alt} fill className="object-cover" />
         <div
           className="pointer-events-none absolute inset-0"
@@ -40,7 +40,7 @@ function CaseStudyCard({ caseStudy }: { caseStudy: CaseStudy }) {
           </span>
         </div>
       </div>
-      <div className="flex flex-1 items-center justify-center border border-black/10 bg-[#f5f5f5] p-5 md:p-6">
+      <div className="flex flex-1 items-center justify-center rounded-b-3xl border border-[#e8e9e8] bg-white p-5 shadow-[0px_2px_6px_0px_rgba(0,0,0,0.04)] md:rounded-b-none md:rounded-r-3xl md:p-[21px] md:pl-5 md:pr-[30px]">
         <CardBody caseStudy={caseStudy} />
       </div>
     </>
@@ -57,7 +57,7 @@ const caseStudies: CaseStudy[] = [
       <>
         They had locked in a low, long-term rate to protect their returns. Pauzible released
         £100K against their equity. Their original mortgage stayed untouched. That paid for a
-        loft conversion. Higher rent. Higher value. <span className="font-semibold">Same low rate.</span>
+        loft conversion. Higher rent. Higher value. <span className="font-bold">Same low rate.</span>
       </>
     ),
   },
@@ -69,7 +69,7 @@ const caseStudies: CaseStudy[] = [
     body: (
       <>
         A renovation ran over budget. To cover it, she put a rental on the market. A sale was agreed. At the last minute, the buyer pulled out. Pauzible released funds fast. A panic sale was avoided. She kept the property and any future upside.{" "}
-        <span className="font-semibold">No rate reset, no early repayment charges.</span>
+        <span className="font-bold">No rate reset, no early repayment charges.</span>
       </>
     ),
   },
@@ -81,7 +81,7 @@ const caseStudies: CaseStudy[] = [
     body: (
       <>
         Self-made build-to-rent landlords. A below-market buying opportunity came up. The window was closing. Pauzible released £250K against their equity. Cash ready. Deal done.{" "}
-        <span className="font-semibold">Property kept. Income kept.</span>
+        <span className="font-bold">Property kept. Income kept.</span>
       </>
     ),
   },
@@ -139,7 +139,7 @@ export default function CaseStudies() {
   return (
     <section className="flex flex-col items-center gap-8 bg-white px-5 pb-16 sm:px-8 md:gap-12 md:px-20 md:pb-24">
       <div className="flex w-full flex-col items-center gap-4">
-        <div className="flex h-[34px] items-center justify-center border-b-2 border-[#d6f39f]">
+        <div className="flex h-[34px] items-center justify-center border-b-2 border-[#e8e9e8]">
           <p className="font-heading text-xs font-bold uppercase tracking-[2px] text-dark">
             In practice
           </p>
@@ -149,7 +149,7 @@ export default function CaseStudies() {
         </p>
       </div>
 
-      <div className="flex w-[1188px] max-w-full flex-col items-center gap-6 md:gap-8">
+      <div className="flex w-[1164px] max-w-full flex-col items-center gap-1.5">
         <div className="relative w-full">
           {/* Grid-stack: every case study is mounted at once, occupying the same cell, so the
               row's height is always the tallest card among them — the card never resizes when
@@ -187,7 +187,7 @@ export default function CaseStudies() {
             disabled={isFirst}
             className={
               isFirst
-                ? "absolute left-2 top-[140px] hidden size-9 -translate-y-1/2 cursor-not-allowed items-center justify-center rounded-[22px] bg-brand/30 shadow-[0px_4px_8px_0px_rgba(56,56,56,0.1)] md:left-[-56px] md:top-1/2 md:flex md:size-11"
+                ? "absolute left-2 top-[140px] hidden size-9 -translate-y-1/2 cursor-not-allowed items-center justify-center rounded-[22px] bg-brand/50 shadow-[0px_4px_8px_0px_rgba(56,56,56,0.1)] md:left-[-56px] md:top-1/2 md:flex md:size-11"
                 : "absolute left-2 top-[140px] hidden size-9 -translate-y-1/2 items-center justify-center rounded-[22px] border border-[#e5e7eb] bg-brand shadow-[0px_4px_4px_0px_rgba(56,56,56,0.1)] transition-colors md:left-[-56px] md:top-1/2 md:flex md:size-11"
             }
           >
@@ -200,7 +200,7 @@ export default function CaseStudies() {
             disabled={isLast}
             className={
               isLast
-                ? "absolute right-2 top-[140px] hidden size-9 -translate-y-1/2 cursor-not-allowed items-center justify-center rounded-[22px] bg-brand/30 shadow-[0px_4px_8px_0px_rgba(56,56,56,0.1)] md:right-[-56px] md:top-1/2 md:flex md:size-11"
+                ? "absolute right-2 top-[140px] hidden size-9 -translate-y-1/2 cursor-not-allowed items-center justify-center rounded-[22px] bg-brand/50 shadow-[0px_4px_8px_0px_rgba(56,56,56,0.1)] md:right-[-56px] md:top-1/2 md:flex md:size-11"
                 : "absolute right-2 top-[140px] hidden size-9 -translate-y-1/2 items-center justify-center rounded-[22px] border border-[#e5e7eb] bg-brand shadow-[0px_4px_4px_0px_rgba(56,56,56,0.1)] transition-colors md:right-[-56px] md:top-1/2 md:flex md:size-11"
             }
           >
@@ -208,26 +208,28 @@ export default function CaseStudies() {
           </button>
         </div>
 
-        <div className="flex items-center gap-1.5">
-          {caseStudies.map((caseStudy, index) => (
-            <button
-              key={caseStudy.heading}
-              type="button"
-              aria-label={`Go to case study ${index + 1}`}
-              onClick={() => setActiveIndex(index)}
-              className={
-                index === activeIndex
-                  ? "h-[7px] w-[24.5px] rounded-full bg-brand transition-all"
-                  : "size-[7px] rounded-full bg-[#d9d9d9] transition-all"
-              }
-            />
-          ))}
-        </div>
+        <div className="flex w-full flex-col items-center gap-[10px]">
+          <p className="w-full text-left text-xs font-medium leading-[18px] tracking-[-0.24px] text-[#6b6d6b]">
+            Case studies are based on real Pauzible customers. Images are illustrative and posed by
+            models to protect their identity.
+          </p>
 
-        <p className="text-center text-xs font-medium leading-[18px] tracking-[-0.24px] text-[#6b6d6b]">
-          Case studies are based on real Pauzible customers. Images are illustrative and posed by
-          models to protect their identity.
-        </p>
+          <div className="flex items-center gap-1.5">
+            {caseStudies.map((caseStudy, index) => (
+              <button
+                key={caseStudy.heading}
+                type="button"
+                aria-label={`Go to case study ${index + 1}`}
+                onClick={() => setActiveIndex(index)}
+                className={
+                  index === activeIndex
+                    ? "h-[7px] w-[24.5px] rounded-full bg-brand transition-all"
+                    : "size-[7px] rounded-full bg-[#d9d9d9] transition-all"
+                }
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

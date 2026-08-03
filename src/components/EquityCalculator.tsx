@@ -46,6 +46,8 @@ export default function EquityCalculator() {
   const [mortgageBalance, setMortgageBalance] = useState(300000);
   const [term, setTerm] = useState<2 | 3 | 5>(5);
   const [monthlyRent, setMonthlyRent] = useState(1667);
+  const [isEditingMonthlyRent, setIsEditingMonthlyRent] = useState(false);
+  const [monthlyRentInput, setMonthlyRentInput] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("fixed");
   const [paymentPercent, setPaymentPercent] = useState(0);
   const [adjustmentPercent, setAdjustmentPercent] = useState(0);
@@ -113,6 +115,17 @@ export default function EquityCalculator() {
     const digits = Number(financingAmountInput.replace(/[^\d]/g, "")) || 0;
     setFinancingAmountRaw(digits);
     setIsEditingFinancingAmount(false);
+  }
+
+  function startEditingMonthlyRent() {
+    setMonthlyRentInput(formatMoney(monthlyRent));
+    setIsEditingMonthlyRent(true);
+  }
+
+  function commitMonthlyRentInput() {
+    const digits = Number(monthlyRentInput.replace(/[^\d]/g, "")) || 0;
+    setMonthlyRent(digits);
+    setIsEditingMonthlyRent(false);
   }
 
   function selectPaymentOption(option: PaymentOption) {
@@ -197,10 +210,10 @@ export default function EquityCalculator() {
             {/* Financing amount slider */}
             <div className="flex w-full max-w-[538px] flex-col gap-3">
               <div className="flex w-full items-center justify-between">
-                <span className="text-[13px] font-medium leading-[19.5px] tracking-[-0.24px] text-[#6b6d6b]">
+                <span className="font-heading text-[13px] font-medium leading-[19.5px] tracking-[-0.24px] text-[#6b6d6b]">
                   {formatMoney(MIN_FINANCING_AMOUNT)}
                 </span>
-                <span className="text-[13px] font-medium leading-[19.5px] tracking-[-0.24px] text-[#6b6d6b]">
+                <span className="font-heading text-[13px] font-medium leading-[19.5px] tracking-[-0.24px] text-[#6b6d6b]">
                   {formatMoney(equity)}
                 </span>
               </div>
@@ -230,13 +243,12 @@ export default function EquityCalculator() {
               </div>
             </div>
 
-            <div className="flex flex-col items-stretch gap-2.5 sm:flex-row sm:items-start">
-              <div className="flex flex-1 flex-col items-start gap-1.5 rounded-2xl bg-[#f5f5f5] p-3">
-                <span className="w-full text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">
+            <div className="flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center sm:gap-6">
+              <div className="flex flex-1 items-center justify-between gap-2">
+                <span className="whitespace-nowrap font-heading text-sm font-semibold tracking-[-0.24px] text-[#454745]">
                   Property value
                 </span>
-                <label className="flex w-full items-center gap-1 whitespace-nowrap rounded-[28px] border border-[#d8d4cf] bg-white px-[9px] py-[7px] text-sm tracking-[-0.24px] drop-shadow-[0_1px_1px_rgba(50,7,7,0.04)]">
-                  <span className="font-semibold text-brand">£</span>
+                <label className="flex w-[120px] shrink-0 items-center justify-center whitespace-nowrap rounded-[28px] border border-[#d8dad8] bg-white px-[9px] py-[7px] text-sm tracking-[-0.24px] drop-shadow-[0_1px_1px_rgba(50,7,7,0.04)]">
                   <input
                     type="text"
                     inputMode="numeric"
@@ -245,16 +257,15 @@ export default function EquityCalculator() {
                       const digits = Number(e.target.value.replace(/[^\d]/g, "")) || 0;
                       setPropertyValue(digits);
                     }}
-                    className="w-full min-w-0 bg-transparent font-medium text-dark outline-none"
+                    className="w-full min-w-0 bg-transparent text-center font-heading font-semibold text-dark outline-none"
                   />
                 </label>
               </div>
-              <div className="flex flex-1 flex-col items-start gap-1.5 rounded-2xl bg-[#f5f5f5] p-3">
-                <span className="w-full text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">
+              <div className="flex flex-1 items-center justify-between gap-2">
+                <span className="whitespace-nowrap font-heading text-sm font-semibold tracking-[-0.24px] text-[#454745]">
                   Mortgage balance
                 </span>
-                <label className="flex w-full items-center gap-1 whitespace-nowrap rounded-[28px] border border-[#d8d4cf] bg-white px-[9px] py-[7px] text-sm tracking-[-0.24px] drop-shadow-[0_1px_1px_rgba(50,7,7,0.04)]">
-                  <span className="font-semibold text-brand">£</span>
+                <label className="flex w-[120px] shrink-0 items-center justify-center whitespace-nowrap rounded-[28px] border border-[#d8dad8] bg-white px-[9px] py-[7px] text-sm tracking-[-0.24px] drop-shadow-[0_1px_1px_rgba(50,7,7,0.04)]">
                   <input
                     type="text"
                     inputMode="numeric"
@@ -263,57 +274,51 @@ export default function EquityCalculator() {
                       const digits = Number(e.target.value.replace(/[^\d]/g, "")) || 0;
                       setMortgageBalance(digits);
                     }}
-                    className="w-full min-w-0 bg-transparent font-medium text-dark outline-none"
+                    className="w-full min-w-0 bg-transparent text-center font-heading font-semibold text-dark outline-none"
                   />
                 </label>
-              </div>
-              <div className="flex flex-1 flex-col items-center justify-center gap-1.5 self-stretch rounded-2xl bg-[#f5f5f5] p-3">
-                <span className="font-heading text-xl font-extrabold tracking-[-0.24px] text-dark">
-                  {formatMoney(equity)}
-                </span>
-                <span className="text-xs font-bold uppercase tracking-[0.6px] text-[#6b6d6b]">equity</span>
               </div>
             </div>
 
             {/* Equity progress bar */}
             <div className="flex h-4 w-full overflow-hidden rounded">
               <div
-                className="h-full border-r-2 border-white bg-[#ce507f]"
+                className="h-full border-r-2 border-white bg-[#f9a8d4]"
                 style={{ width: `${releasedWidthPct}%` }}
               />
               <div
-                className="h-full border-r-2 border-white bg-[#ffa3c5]"
+                className="h-full border-r-2 border-white bg-[#fbcfe8]"
                 style={{ width: `${retainedWidthPct}%` }}
               />
-              <div className="h-full flex-1 bg-[#d3bdf9]" style={{ width: `${mortgageWidthPct}%` }} />
+              <div className="h-full flex-1 bg-[#e8e9e8]" style={{ width: `${mortgageWidthPct}%` }} />
             </div>
 
             <div className="flex w-full flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1">
-                  <span className="size-[9px] shrink-0 rounded-full bg-[#ce507f]" />
-                  <span className="text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">Released</span>
+                  <span className="size-[9px] shrink-0 rounded-full bg-[#f9a8d4]" />
+                  <span className="font-heading text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">Released</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="size-[9px] shrink-0 rounded-full bg-[#ffa3c5]" />
-                  <span className="text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">Retained equity</span>
+                  <span className="size-[9px] shrink-0 rounded-full bg-[#fbcfe8]" />
+                  <span className="font-heading text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">Retained equity</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="size-[9px] shrink-0 rounded-full bg-[#d3bdf9]" />
-                  <span className="text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">Mortgage</span>
+                  <span className="size-[9px] shrink-0 rounded-full bg-[#e8e9e8]" />
+                  <span className="font-heading text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">Mortgage</span>
                 </div>
               </div>
               <div
-                className={`flex h-[26px] items-center justify-center rounded-full border bg-white px-[13px] ${
+                className={`flex h-[26px] items-center justify-center rounded-full px-3 ${
                   financingAmount > FINANCING_LIMIT
-                    ? "border-[#dc2626]"
+                    ? "bg-[rgba(220,38,38,0.1)]"
                     : financingAmount === FINANCING_LIMIT
-                      ? "border-[#d48400]"
-                      : "border-[#1f8a5b]"
+                      ? "bg-[#ffeed1]"
+                      : "bg-[rgba(31,138,91,0.1)]"
                 }`}
               >
                 <span
-                  className={`whitespace-nowrap text-xs font-semibold tracking-[-0.24px] ${
+                  className={`whitespace-nowrap font-heading text-xs font-semibold tracking-[-0.24px] ${
                     financingAmount > FINANCING_LIMIT
                       ? "text-[#dc2626]"
                       : financingAmount === FINANCING_LIMIT
@@ -324,28 +329,34 @@ export default function EquityCalculator() {
                   {financingAmount > FINANCING_LIMIT
                     ? "Above our limit"
                     : financingAmount === FINANCING_LIMIT
-                      ? "Near our limit"
+                      ? "Nearing limit"
                       : "Comfortably in range"}
                 </span>
               </div>
             </div>
 
-            <div className="flex h-[99px] w-full items-start rounded-2xl">
-              <div className="flex h-full flex-1 flex-col items-center gap-1.5 px-2 py-[18px]">
-                <span className="font-heading text-3xl font-extrabold tracking-[-0.24px] text-dark">
+            <div className="flex h-[80px] w-full items-center rounded-2xl">
+              <div className="flex h-full flex-1 flex-col items-center justify-center gap-1.5 px-2 py-[18px]">
+                <span className="font-heading text-3xl font-extrabold tracking-[-0.24px] text-[#320707]">
                   {Math.round(equityPercent)}%
                 </span>
-                <span className="text-xs font-bold uppercase tracking-[0.6px] text-[#6b6d6b]">Equity percent</span>
+                <span className="font-heading text-xs font-bold uppercase tracking-[0.6px] text-[#320707]">
+                  Releasing from equity
+                </span>
               </div>
-              <div className="flex h-full items-center py-3.5">
-                <div className="h-full w-px bg-[#d8d4cf]" />
+              <div className="flex h-full flex-col items-center justify-center gap-2 py-1">
+                <div className="h-full w-px flex-1 bg-[#d8d4cf]" />
+                <div className="relative h-[8px] w-[15px] shrink-0">
+                  <Image src="/equity-calculator/or-icon.svg" alt="or" fill />
+                </div>
+                <div className="h-full w-px flex-1 bg-[#d8d4cf]" />
               </div>
-              <div className="flex h-full flex-1 flex-col items-center gap-1.5 px-2 py-[18px]">
-                <span className="font-heading text-3xl font-extrabold tracking-[-0.24px] text-dark">
+              <div className="flex h-full flex-1 flex-col items-center justify-center gap-1.5 px-2 py-[18px]">
+                <span className="font-heading text-3xl font-extrabold tracking-[-0.24px] text-[#320707]">
                   {Math.round(propertyValuePercent)}%
                 </span>
-                <span className="text-xs font-bold uppercase tracking-[0.6px] text-[#6b6d6b]">
-                  Property value percent
+                <span className="font-heading text-xs font-bold uppercase tracking-[0.6px] text-[#320707]">
+                  Releasing from valuation
                 </span>
               </div>
             </div>
@@ -383,7 +394,7 @@ export default function EquityCalculator() {
                       {years}
                     </span>
                     <span
-                      className={`text-xs font-bold uppercase tracking-[0.6px] ${
+                      className={`font-heading text-xs font-bold uppercase tracking-[0.6px] ${
                         active ? "text-brand" : "text-[#6b6d6b]"
                       }`}
                     >
@@ -404,43 +415,22 @@ export default function EquityCalculator() {
               <p className="font-heading text-base font-bold tracking-[-0.19px] text-dark sm:text-xl">Your payments</p>
             </div>
 
-            <div className="flex w-full items-center justify-between gap-2 rounded-xl bg-[#f5f5f5] py-2.5 pl-3 pr-2.5 sm:pl-4">
-              <span className="text-xs font-semibold tracking-[-0.24px] text-dark sm:text-sm">
-                Monthly rent from property
+            <div className="flex w-full flex-col items-center gap-4">
+              <span className="text-center font-heading text-base font-semibold tracking-[-0.24px] text-[#454745] sm:text-lg">
+                Choose how to pay final repayment
               </span>
-              <label className="flex w-[110px] shrink-0 items-center gap-1 whitespace-nowrap rounded-[28px] border border-[#d8d4cf] bg-white px-[9px] py-[7px] text-sm tracking-[-0.24px] drop-shadow-[0_1px_1px_rgba(50,7,7,0.04)] sm:w-[135px]">
-                <span className="font-semibold text-brand">£</span>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  value={monthlyRent.toLocaleString("en-GB")}
-                  onChange={(e) => {
-                    const digits = Number(e.target.value.replace(/[^\d]/g, "")) || 0;
-                    setMonthlyRent(digits);
-                  }}
-                  className="w-full min-w-0 bg-transparent font-medium text-dark outline-none"
-                />
-              </label>
-            </div>
-
-            <div className="flex w-full flex-col items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-[0.6px] text-[#6b6d6b]">
-                Final repayment amount
-              </span>
-              <div className="flex w-full items-start justify-center rounded-full border border-[rgba(131,13,65,0.08)] bg-[#f5f5f5] p-1">
+              <div className="flex w-full items-start justify-center rounded-full bg-[#f1f5f2] p-[3px]">
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("fixed")}
-                  className={`flex-1 rounded-full px-[17px] py-[9px] text-center ${
-                    paymentMethod === "fixed"
-                      ? "border border-[#e8e9e8] bg-brand text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.05)]"
-                      : "text-[#6b6d6b]"
+                  className={`flex-1 rounded-full px-4 py-2 text-center ${
+                    paymentMethod === "fixed" ? "bg-brand drop-shadow-[0_1px_1px_rgba(0,0,0,0.05)]" : ""
                   }`}
                 >
-                  <p className={`text-sm font-semibold tracking-[-0.24px] ${paymentMethod === "fixed" ? "text-white" : "text-dark"}`}>
+                  <p className={`font-heading text-sm font-semibold tracking-[-0.24px] sm:text-base ${paymentMethod === "fixed" ? "text-white" : "text-dark"}`}>
                     Fixed Amount
                   </p>
-                  <p className={`text-xs font-medium ${paymentMethod === "fixed" ? "text-white/80" : "text-[#6b6d6b]"}`}>
+                  <p className={`font-heading text-xs font-medium ${paymentMethod === "fixed" ? "text-white/80" : "text-[#6b6d6b]"}`}>
                     Set
                     <br className="sm:hidden" />
                     <span className="hidden sm:inline">{" "}</span>
@@ -451,67 +441,139 @@ export default function EquityCalculator() {
                   type="button"
                   onClick={() => setPaymentMethod("share")}
                   className={`flex-1 rounded-full px-4 py-2 text-center ${
-                    paymentMethod === "share"
-                      ? "border border-[#e8e9e8] bg-brand text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.05)]"
-                      : "text-[#6b6d6b]"
+                    paymentMethod === "share" ? "bg-brand drop-shadow-[0_1px_1px_rgba(0,0,0,0.05)]" : ""
                   }`}
                 >
-                  <p className={`text-sm font-semibold tracking-[-0.24px] ${paymentMethod === "share" ? "text-white" : "text-dark"}`}>
+                  <p className={`font-heading text-sm font-semibold tracking-[-0.24px] sm:text-base ${paymentMethod === "share" ? "text-white" : "text-dark"}`}>
                     Share Value
                   </p>
-                  <p className={`text-xs font-medium ${paymentMethod === "share" ? "text-white/80" : "text-[#6b6d6b]"}`}>
+                  <p className={`font-heading text-xs font-medium ${paymentMethod === "share" ? "text-white/80" : "text-[#6b6d6b]"}`}>
                     Changes with your property value
                   </p>
                 </button>
               </div>
             </div>
 
-            <div className="flex w-full flex-col items-center justify-center gap-4">
-              <span className="text-xs font-bold uppercase tracking-[0.6px] text-[#6b6d6b]">
-                Choose how much to pay each month
+            <div className="flex w-full flex-col items-center gap-2">
+              <span className="text-center font-heading text-base font-semibold tracking-[-0.24px] text-[#454745] sm:text-lg">
+                Monthly rent you get from property
               </span>
-              <div className="flex w-full flex-col items-stretch gap-2.5 sm:flex-row sm:items-center sm:gap-4">
+              <div className="flex w-full items-center justify-center gap-2 px-0 sm:px-5">
+                {isEditingMonthlyRent ? (
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    autoFocus
+                    value={monthlyRentInput}
+                    onChange={(e) => {
+                      const digits = Number(e.target.value.replace(/[^\d]/g, "")) || 0;
+                      setMonthlyRentInput(digits > 0 ? formatMoney(digits) : "");
+                    }}
+                    onBlur={commitMonthlyRentInput}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") commitMonthlyRentInput();
+                      if (e.key === "Escape") setIsEditingMonthlyRent(false);
+                    }}
+                    className="w-full min-w-0 flex-1 appearance-none border-0 bg-transparent p-0 text-center font-heading text-2xl font-extrabold leading-none tracking-tight text-brand outline-none sm:text-[30px]"
+                  />
+                ) : (
+                  <p
+                    role="button"
+                    tabIndex={0}
+                    onClick={startEditingMonthlyRent}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") startEditingMonthlyRent();
+                    }}
+                    className="flex-1 cursor-pointer text-center font-heading text-2xl font-extrabold tracking-tight text-brand sm:text-[30px]"
+                  >
+                    {formatMoney(monthlyRent)}
+                  </p>
+                )}
+                <button
+                  type="button"
+                  onClick={startEditingMonthlyRent}
+                  aria-label="Edit monthly rent"
+                  className="relative size-[30px] shrink-0 rounded-full bg-[#f5f5f5]"
+                >
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="relative size-[14px]">
+                      <Image src="/equity-calculator/edit-icon.svg" alt="" fill />
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <div className="flex w-full flex-col items-center justify-center gap-4">
+              <span className="text-center font-heading text-base font-semibold tracking-[-0.24px] text-[#454745] sm:text-lg">
+                Choose how much interest cost to pay each month
+              </span>
+              <div className="flex w-full items-stretch gap-3">
                 <button
                   type="button"
                   onClick={() => selectPaymentOption("rent")}
-                  className={`flex flex-1 items-center justify-center gap-1.5 rounded-2xl border px-3 py-2.5 sm:px-[17px] sm:py-[13px] ${
-                    paymentOption === "rent" ? "border-brand bg-[rgba(131,13,65,0.06)]" : "border-[#e8e9e8] bg-white"
+                  className={`flex flex-1 items-center justify-between gap-1.5 rounded-2xl px-3 py-3 sm:px-4 ${
+                    paymentOption === "rent" ? "bg-[#fde2e8]" : "bg-[#f1f5f2]"
                   }`}
                 >
-                  <span className={`size-4 shrink-0 rounded-full border ${paymentOption === "rent" ? "border-brand" : "border-[#d0d1d0] shadow-[0_1px_2px_rgba(0,0,0,0.05)]"}`}>
-                    {paymentOption === "rent" && <span className="mx-auto mt-[3px] block size-[8px] rounded-full bg-brand" />}
-                  </span>
-                  <span className={`whitespace-nowrap text-xs font-semibold tracking-[-0.24px] sm:text-sm ${paymentOption === "rent" ? "text-brand" : "text-[#6b6d6b]"}`}>
+                  <span className={`whitespace-nowrap font-heading text-sm font-semibold tracking-[-0.24px] ${paymentOption === "rent" ? "text-brand" : "text-dark"}`}>
                     Rent share only
                   </span>
+                  {paymentOption === "rent" ? (
+                    <span className="flex size-4 shrink-0 items-center justify-center rounded-full bg-brand">
+                      <span className="relative size-[10px]">
+                        <Image src="/equity-calculator/check-icon.svg" alt="" fill />
+                      </span>
+                    </span>
+                  ) : (
+                    <span className="relative size-4 shrink-0">
+                      <Image src="/equity-calculator/radio-unchecked.svg" alt="" fill />
+                    </span>
+                  )}
                 </button>
                 <button
                   type="button"
                   onClick={() => selectPaymentOption("mixed")}
-                  className={`flex flex-1 items-center justify-center gap-1.5 rounded-2xl border px-3 py-2.5 sm:px-[17px] sm:py-[13px] ${
-                    paymentOption === "mixed" ? "border-brand bg-[rgba(131,13,65,0.06)]" : "border-[#e8e9e8] bg-white"
+                  className={`flex flex-1 items-center justify-between gap-1.5 rounded-2xl px-3 py-3 sm:px-4 ${
+                    paymentOption === "mixed" ? "bg-[#fde2e8]" : "bg-[#f1f5f2]"
                   }`}
                 >
-                  <span className={`size-4 shrink-0 rounded-full border ${paymentOption === "mixed" ? "border-brand" : "border-[#d0d1d0] shadow-[0_1px_2px_rgba(0,0,0,0.05)]"}`}>
-                    {paymentOption === "mixed" && <span className="mx-auto mt-[3px] block size-[8px] rounded-full bg-brand" />}
+                  <span className={`whitespace-nowrap font-heading text-sm font-semibold tracking-[-0.24px] ${paymentOption === "mixed" ? "text-brand" : "text-dark"}`}>
+                    Partial Monthly
                   </span>
-                  <span className={`whitespace-nowrap text-xs font-semibold tracking-[-0.24px] sm:text-sm ${paymentOption === "mixed" ? "text-brand" : "text-[#6b6d6b]"}`}>
-                    Mixed partially
-                  </span>
+                  {paymentOption === "mixed" ? (
+                    <span className="flex size-4 shrink-0 items-center justify-center rounded-full bg-brand">
+                      <span className="relative size-[10px]">
+                        <Image src="/equity-calculator/check-icon.svg" alt="" fill />
+                      </span>
+                    </span>
+                  ) : (
+                    <span className="relative size-4 shrink-0">
+                      <Image src="/equity-calculator/radio-unchecked.svg" alt="" fill />
+                    </span>
+                  )}
                 </button>
                 <button
                   type="button"
                   onClick={() => selectPaymentOption("full")}
-                  className={`flex flex-1 items-center justify-center gap-1.5 rounded-2xl border px-3 py-2.5 sm:px-[17px] sm:py-[13px] ${
-                    paymentOption === "full" ? "border-brand bg-[rgba(131,13,65,0.06)]" : "border-[#e8e9e8] bg-white"
+                  className={`flex flex-1 items-center justify-between gap-1.5 rounded-2xl px-3 py-3 sm:px-4 ${
+                    paymentOption === "full" ? "bg-[#fde2e8]" : "bg-[#f1f5f2]"
                   }`}
                 >
-                  <span className={`size-4 shrink-0 rounded-full border ${paymentOption === "full" ? "border-brand" : "border-[#d0d1d0] shadow-[0_1px_2px_rgba(0,0,0,0.05)]"}`}>
-                    {paymentOption === "full" && <span className="mx-auto mt-[3px] block size-[8px] rounded-full bg-brand" />}
+                  <span className={`whitespace-nowrap font-heading text-sm font-semibold tracking-[-0.24px] ${paymentOption === "full" ? "text-brand" : "text-dark"}`}>
+                    Monthly
                   </span>
-                  <span className={`whitespace-nowrap text-xs font-semibold tracking-[-0.24px] sm:text-sm ${paymentOption === "full" ? "text-brand" : "text-[#6b6d6b]"}`}>
-                    Full monthly
-                  </span>
+                  {paymentOption === "full" ? (
+                    <span className="flex size-4 shrink-0 items-center justify-center rounded-full bg-brand">
+                      <span className="relative size-[10px]">
+                        <Image src="/equity-calculator/check-icon.svg" alt="" fill />
+                      </span>
+                    </span>
+                  ) : (
+                    <span className="relative size-4 shrink-0">
+                      <Image src="/equity-calculator/radio-unchecked.svg" alt="" fill />
+                    </span>
+                  )}
                 </button>
               </div>
             </div>
@@ -526,10 +588,10 @@ export default function EquityCalculator() {
                   leftmost = Rent share only, dragged = Mixed partially, rightmost = Full monthly */}
               <div className="flex w-full max-w-[538px] flex-col gap-3">
                 <div className="flex w-full items-center justify-between">
-                  <span className="text-[13px] font-medium leading-[19.5px] tracking-[-0.24px] text-[#6b6d6b]">
+                  <span className="font-heading text-[13px] font-medium leading-[19.5px] tracking-[-0.24px] text-[#6b6d6b]">
                     {formatMoney(minPayment)}/mo
                   </span>
-                  <span className="text-[13px] font-medium leading-[19.5px] tracking-[-0.24px] text-[#6b6d6b]">
+                  <span className="font-heading text-[13px] font-medium leading-[19.5px] tracking-[-0.24px] text-[#6b6d6b]">
                     {formatMoney(maxPayment)}/mo
                   </span>
                 </div>
@@ -554,7 +616,7 @@ export default function EquityCalculator() {
               <div className="relative size-5 shrink-0">
                 <Image src="/equity-calculator/toast-icon.svg" alt="" fill />
               </div>
-              <p className="text-center text-sm font-semibold tracking-[-0.24px] text-[#1f8a5b]">
+              <p className="text-center font-heading text-sm font-semibold tracking-[-0.24px] text-[#1f8a5b]">
                 {paymentOption === "rent"
                   ? "You have chosen to fully defer the financing cost."
                   : savingsOverall > 0
@@ -569,8 +631,8 @@ export default function EquityCalculator() {
 
               <div className="flex w-full items-end justify-between">
                 <div className="flex flex-col items-start gap-1">
-                  <span className="text-sm font-medium tracking-[-0.24px] text-[#320707]">Pauzible&apos;s share</span>
-                  <span className="text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">
+                  <span className="font-heading text-sm font-medium tracking-[-0.24px] text-[#320707]">Pauzible&apos;s share</span>
+                  <span className="font-heading text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">
                     of your {formatMoney(monthlyRent)} monthly rent
                   </span>
                 </div>
@@ -583,8 +645,8 @@ export default function EquityCalculator() {
 
               <div className="flex w-full items-end justify-between">
                 <div className="flex flex-col items-start gap-0.5">
-                  <span className="text-sm font-medium tracking-[-0.24px] text-[#320707]">Interest cost</span>
-                  <span className="text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">
+                  <span className="font-heading text-sm font-medium tracking-[-0.24px] text-[#320707]">Interest cost</span>
+                  <span className="font-heading text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">
                     <span className="font-semibold text-brand">{(effectiveMonthlyRate * 100).toFixed(2)}%</span> per month
                   </span>
                 </div>
@@ -596,7 +658,7 @@ export default function EquityCalculator() {
               <div className="h-px w-full bg-[#d9d9d9]" />
 
               <div className="flex w-full items-center justify-between">
-                <span className="text-sm font-semibold tracking-[-0.24px] text-[#320707]">Total Monthly Payment</span>
+                <span className="font-heading text-sm font-semibold tracking-[-0.24px] text-[#320707]">Total Monthly Payment</span>
                 <span className="font-heading text-2xl font-bold tracking-[-0.24px] text-brand">
                   {formatMoney(totalMonthlyPayment)}/mo
                 </span>
@@ -608,7 +670,7 @@ export default function EquityCalculator() {
               <p className="font-heading text-xl font-semibold tracking-[-0.24px] text-dark">Final Repayment</p>
 
               <div className="flex w-full items-center justify-between">
-                <span className="text-sm font-medium tracking-[-0.24px] text-[#320707]">
+                <span className="font-heading text-sm font-medium tracking-[-0.24px] text-[#320707]">
                   Principal (Released amount)
                 </span>
                 <span className="font-heading text-[17px] font-bold tracking-[-0.24px] text-[#320707]">
@@ -617,7 +679,7 @@ export default function EquityCalculator() {
               </div>
 
               <div className="flex w-full items-center justify-between">
-                <span className="text-sm font-medium tracking-[-0.24px] text-[#320707]">
+                <span className="font-heading text-sm font-medium tracking-[-0.24px] text-[#320707]">
                   Unpaid interest (Interest cost)
                 </span>
                 <span className="font-heading text-[17px] font-bold tracking-[-0.24px] text-[#320707]">
@@ -635,7 +697,7 @@ export default function EquityCalculator() {
                   </p>
 
                   <div className="flex w-full items-center justify-between">
-                    <span className="text-sm font-medium tracking-[-0.24px] text-[#320707]">Adjustment amount</span>
+                    <span className="font-heading text-sm font-medium tracking-[-0.24px] text-[#320707]">Adjustment amount</span>
                     <span className="font-heading text-[17px] font-bold tracking-[-0.24px] text-[#320707]">
                       {formatSignedK(adjustmentAmount)}
                     </span>
@@ -662,24 +724,24 @@ export default function EquityCalculator() {
                     </div>
                     <div className="flex w-full items-start justify-between">
                       <div className="flex flex-col items-start gap-0.5">
-                        <span className="whitespace-nowrap text-xs font-semibold tracking-[-0.24px] text-[#4a7a1e]">
+                        <span className="whitespace-nowrap font-heading text-xs font-semibold tracking-[-0.24px] text-[#4a7a1e]">
                           Falls: {formatSignedK(fallsAdjustmentAmount)}
                         </span>
-                        <span className="whitespace-nowrap text-xs tracking-[-0.24px] text-[#6b6d6b]">
+                        <span className="whitespace-nowrap font-heading text-xs tracking-[-0.24px] text-[#6b6d6b]">
                           ({ADJUSTMENT_RANGE_PERCENT}% lower)
                         </span>
                       </div>
                       <div className="flex flex-col items-center gap-0.5">
-                        <span className="whitespace-nowrap text-xs font-semibold tracking-[-0.24px] text-dark">
+                        <span className="whitespace-nowrap font-heading text-xs font-semibold tracking-[-0.24px] text-dark">
                           Unchanged: £0
                         </span>
-                        <span className="whitespace-nowrap text-xs tracking-[-0.24px] text-[#6b6d6b]">(as today)</span>
+                        <span className="whitespace-nowrap font-heading text-xs tracking-[-0.24px] text-[#6b6d6b]">(as today)</span>
                       </div>
                       <div className="flex flex-col items-end gap-0.5">
-                        <span className="whitespace-nowrap text-xs font-semibold tracking-[-0.24px] text-[#d48400]">
+                        <span className="whitespace-nowrap font-heading text-xs font-semibold tracking-[-0.24px] text-[#d48400]">
                           Rises: {formatSignedK(risesAdjustmentAmount)}
                         </span>
-                        <span className="whitespace-nowrap text-xs tracking-[-0.24px] text-[#6b6d6b]">
+                        <span className="whitespace-nowrap font-heading text-xs tracking-[-0.24px] text-[#6b6d6b]">
                           ({ADJUSTMENT_RANGE_PERCENT}% higher)
                         </span>
                       </div>
@@ -707,11 +769,11 @@ export default function EquityCalculator() {
             onClick={openUnlockEquityDialog}
             className="flex h-14 w-full items-center justify-center rounded-full bg-brand"
           >
-            <span className="text-lg font-semibold leading-[26px] tracking-[-0.24px] text-brand-btn-text">
+            <span className="font-heading text-lg font-semibold leading-[26px] tracking-[-0.24px] text-brand-btn-text">
               Get started
             </span>
           </button>
-          <p className="text-center text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">
+          <p className="text-center font-heading text-xs font-medium tracking-[-0.24px] text-[#6b6d6b]">
             Illustrative example. Not a quote or offer.
           </p>
         </div>
